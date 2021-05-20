@@ -12,88 +12,118 @@ private:
 	
 public:
 	
-	LinkList():m_head(nullptr){}
+	LinkList();
 
-	Node* getNthPointer(int index) {
+	Node* getNthPointer(int index);
 
-		Node* temp = m_head;
-		for (int i = 0; i < index; i++) {
-			temp = temp->next;
-		}
-		return temp;
-	}
+	void Insert(int data, int index);
 
-	void Insert(int data, int index) {
+	void Insert(int data);
 
-		Node *temp = new Node();
-		temp->data = data;
-		temp->next = nullptr;
+	void Delete(int index);
 
-		if (index == 0) {
-			temp->next = m_head;
-			m_head = temp;
-			return;
-		}
-
-		Node* temp2 = getNthPointer(index - 1);
-		temp->next = temp2->next;
-		temp2->next = temp;
-	}
-
-	void Insert(int data) {
-
-		Node* temp = new Node;
-		temp->data = data;
-		temp->next = m_head;
-		m_head = temp;
-	}
-
-	void Print() {
-
-		Node* temp = m_head;
-
-		std::cout << "List is : ";
-		while (temp != nullptr) {
-
-			std::cout << temp->data << " ";
-			temp = temp->next;
-		}
-		std::cout << std::endl;
-	}
+	void Print();
 };
 
 void InsertToHeadTest();
-void InsertToNthPoint();
+void InsertToNthNode();
+void DeleteNthNode();
 
 int main(int argc, char** args) {
 
-	//InsertToHeadTest();
-	InsertToNthPoint();
+	InsertToHeadTest();
+	InsertToNthNode();
+	DeleteNthNode();
 
 	return 0;
 }
+
+
+LinkList::LinkList() :m_head(nullptr) {}
+
+Node* LinkList::getNthPointer(int index) {
+
+	Node* temp = m_head;
+	for (int i = 0; i < index; i++) {
+		temp = temp->next;
+	}
+	return temp;
+}
+
+void LinkList::Insert(int data) {
+
+	Node* temp = new Node;
+	temp->data = data;
+	temp->next = m_head;
+	m_head = temp;
+}
+
+void LinkList::Insert(int data, int index) {
+
+	Node *temp = new Node();
+	temp->data = data;
+	temp->next = nullptr;
+
+	if (index == 0) {
+		temp->next = m_head;
+		m_head = temp;
+		return;
+	}
+
+	Node* temp2 = getNthPointer(index - 1);
+	temp->next = temp2->next;
+	temp2->next = temp;
+}
+
+void LinkList::Delete(int index) {
+
+	if (index == 0) {
+		Node* temp = m_head;
+		m_head = temp->next;
+		delete temp;
+		return;
+	}
+
+	Node* temp = getNthPointer(index - 1);
+	Node* temp2 = temp->next;
+
+	temp->next = temp2->next;
+	delete temp2;
+}
+
+void LinkList::Print() {
+
+	Node* temp = m_head;
+
+	std::cout << "List is : ";
+	while (temp != nullptr) {
+
+		std::cout << temp->data << " ";
+		temp = temp->next;
+	}
+	std::cout << std::endl;
+}
+
 
 void InsertToHeadTest() {
 
 	LinkList list;
 
-	int n = 0;
-	int x = 0;
-	std::cout << "how many numbers : ";
-	std::cin >> n;
+	list.Insert(2);
+	list.Print();
+	list.Insert(4);
+	list.Print();
+	list.Insert(6);
+	list.Print();
+	list.Insert(5);
+	list.Print();
 
-	for (int i = 0; i < n; i++) {
+	int index = 0;
 
-		std::cout << "Enter the number : ";
-		std::cin >> x;
-		list.Insert(x);
-		list.Print();
-	}
-
-	std::cout << list.getNthPointer(0)->data << std::endl;
+	std::cout << "Value of index ( " << index << " ) : " << list.getNthPointer(0)->data << std::endl;
 }
 
-void InsertToNthPoint() {
+void InsertToNthNode() {
 
 	LinkList list;
 
@@ -102,4 +132,25 @@ void InsertToNthPoint() {
 	list.Insert(4, 0);
 	list.Insert(5, 1);
 	list.Print(); //4, 5, 2, 3
+}
+
+void DeleteNthNode() {
+
+	LinkList list;
+
+	list.Insert(2);
+	list.Insert(4);
+	list.Insert(6);
+	list.Insert(5);
+	list.Print();
+
+	list.Delete(1);
+	list.Print();
+
+	list.Delete(0);
+	list.Print();
+
+	list.Delete(1);
+	list.Print();
+
 }
