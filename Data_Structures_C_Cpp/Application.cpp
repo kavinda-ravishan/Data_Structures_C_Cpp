@@ -22,18 +22,23 @@ public:
 
 	void Delete(int index);
 
-	void Print();
+	void Reverse();
+
+	void Traverse(void(*callback)(int data), void(*callbackStart)(), void(*callbackEnd)());
 };
 
+void PrintList(LinkList list);
 void InsertToHeadTest();
-void InsertToNthNode();
-void DeleteNthNode();
+void InsertToNthNodeTest();
+void DeleteNthNodeTest();
+void ReverseTheListTest();
 
 int main(int argc, char** args) {
 
 	InsertToHeadTest();
-	InsertToNthNode();
-	DeleteNthNode();
+    InsertToNthNodeTest();
+	DeleteNthNodeTest();
+	ReverseTheListTest();
 
 	return 0;
 }
@@ -91,50 +96,89 @@ void LinkList::Delete(int index) {
 	delete temp2;
 }
 
-void LinkList::Print() {
+void LinkList::Reverse() {
+
+	Node* current = m_head;
+	Node* prev = nullptr;
+	Node* next = nullptr;
+
+	while (current != nullptr)
+	{
+		next = current->next;
+		current->next = prev;
+		prev = current;
+		current = next;
+	}
+
+	m_head = prev;
+}
+
+void LinkList::Traverse(void(*callback)(int data), void(*callbackStart)(),void(*callbackEnd)()) {
+
+	callbackStart();
 
 	Node* temp = m_head;
 
-	std::cout << "List is : ";
 	while (temp != nullptr) {
 
-		std::cout << temp->data << " ";
+		callback(temp->data);
 		temp = temp->next;
 	}
-	std::cout << std::endl;
+
+	callbackEnd();
 }
 
 
+void PrintList(LinkList list) {
+	list.Traverse(
+		[](int data) { std::cout << data << " "; },
+		[](){ std::cout << "List : "; }, 
+		[]() {std::cout << std::endl; }
+	);
+}
+
 void InsertToHeadTest() {
+
+	std::cout << " --- Insert To Head --- " << std::endl;
 
 	LinkList list;
 
 	list.Insert(2);
-	list.Print();
+	PrintList(list);
 	list.Insert(4);
-	list.Print();
+	PrintList(list);
 	list.Insert(6);
-	list.Print();
+	PrintList(list);
 	list.Insert(5);
-	list.Print();
+	PrintList(list);
 
 	int index = 0;
 
 	std::cout << "Value of index ( " << index << " ) : " << list.getNthPointer(0)->data << std::endl;
+	std::cout << std::endl;
 }
 
-void InsertToNthNode() {
+void InsertToNthNodeTest() {
+
+	std::cout << " --- Insert To Nth Node --- " << std::endl;
 
 	LinkList list;
 
 	list.Insert(2, 0);
+	PrintList(list);
 	list.Insert(3, 1);
+	PrintList(list);
 	list.Insert(4, 0);
+	PrintList(list);
 	list.Insert(5, 1);
-	list.Print(); //4, 5, 2, 3
+	PrintList(list); //4, 5, 2, 3
+
+	std::cout << std::endl;
 }
 
-void DeleteNthNode() {
+void DeleteNthNodeTest() {
+
+	std::cout << " --- Delete Nth Node --- " << std::endl;
 
 	LinkList list;
 
@@ -142,15 +186,34 @@ void DeleteNthNode() {
 	list.Insert(4);
 	list.Insert(6);
 	list.Insert(5);
-	list.Print();
+	PrintList(list);
 
 	list.Delete(1);
-	list.Print();
+	PrintList(list);
 
 	list.Delete(0);
-	list.Print();
+	PrintList(list);
 
 	list.Delete(1);
-	list.Print();
+	PrintList(list);
 
+	std::cout << std::endl;
+}
+
+void ReverseTheListTest() {
+
+	std::cout << " --- Reverse The List --- " << std::endl;
+
+	LinkList list;
+
+	list.Insert(2);
+	list.Insert(4);
+	list.Insert(6);
+	list.Insert(5);
+	PrintList(list);
+
+	list.Reverse();
+	PrintList(list);
+
+	std::cout << std::endl;
 }
