@@ -9,21 +9,15 @@ struct Node
 class LinkList {
 private:
 	Node* m_head;
-	
-public:
-	
-	LinkList();
-
 	Node* getNthPointer(int index);
-
+public:
+	LinkList();
+	Node* getHead();
+	int getElement(int index);
 	void Insert(int data, int index);
-
 	void Insert(int data);
-
 	void Delete(int index);
-
 	void Reverse();
-
 	void Traverse(void(*callback)(int data), void(*callbackStart)(), void(*callbackEnd)());
 };
 
@@ -32,6 +26,9 @@ void InsertToHeadTest();
 void InsertToNthNodeTest();
 void DeleteNthNodeTest();
 void ReverseTheListTest();
+void PrintRecursively(Node* p);
+void PrintRecursivelyInReverseOrder(Node* p);
+void PrintRecursivelyTest();
 
 int main(int argc, char** args) {
 
@@ -39,6 +36,7 @@ int main(int argc, char** args) {
     InsertToNthNodeTest();
 	DeleteNthNodeTest();
 	ReverseTheListTest();
+	PrintRecursivelyTest();
 
 	return 0;
 }
@@ -53,6 +51,15 @@ Node* LinkList::getNthPointer(int index) {
 		temp = temp->next;
 	}
 	return temp;
+}
+
+Node* LinkList::getHead() {
+	return m_head;
+}
+
+int LinkList::getElement(int index) {
+
+	return getNthPointer(index)->data;
 }
 
 void LinkList::Insert(int data) {
@@ -154,7 +161,7 @@ void InsertToHeadTest() {
 
 	int index = 0;
 
-	std::cout << "Value of index ( " << index << " ) : " << list.getNthPointer(0)->data << std::endl;
+	std::cout << "Value of index ( " << index << " ) : " << list.getElement(0) << std::endl;
 	std::cout << std::endl;
 }
 
@@ -214,6 +221,42 @@ void ReverseTheListTest() {
 
 	list.Reverse();
 	PrintList(list);
+
+	std::cout << std::endl;
+}
+
+void PrintRecursively(Node* p) {
+
+	if (p == nullptr) return;
+	std::cout << p->data << " ";
+	PrintRecursively(p->next);
+}
+
+void PrintRecursivelyInReverseOrder(Node* p) {
+
+	if (p == nullptr) return;
+	PrintRecursivelyInReverseOrder(p->next);
+	std::cout << p->data << " ";
+}
+
+void PrintRecursivelyTest() {
+
+	std::cout << " --- Print Recursively --- " << std::endl;
+
+	LinkList list;
+
+	list.Insert(2);
+	list.Insert(4);
+	list.Insert(6);
+	list.Insert(5);
+
+	std::cout << "List : ";
+	PrintRecursively(list.getHead());
+
+	std::cout << std::endl;
+
+	std::cout << "List In Reverse Order: ";
+	PrintRecursivelyInReverseOrder(list.getHead());
 
 	std::cout << std::endl;
 }
