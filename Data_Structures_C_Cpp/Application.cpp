@@ -13,6 +13,9 @@ private:
 public:
 	LinkList();
 	Node* getHead();
+	void updateHead(Node* p){
+		m_head = p;
+	}
 	int getElement(int index);
 	void Insert(int data, int index);
 	void Insert(int data);
@@ -29,14 +32,17 @@ void ReverseTheListTest();
 void PrintRecursively(Node* p);
 void PrintRecursivelyInReverseOrder(Node* p);
 void PrintRecursivelyTest();
+void ReverseTheListRecursively(Node* p, LinkList* list);
+void ReverseTheListRecursivelyTest();
 
 int main(int argc, char** args) {
-
+	
 	InsertToHeadTest();
     InsertToNthNodeTest();
 	DeleteNthNodeTest();
 	ReverseTheListTest();
 	PrintRecursivelyTest();
+	ReverseTheListRecursivelyTest();
 
 	return 0;
 }
@@ -259,4 +265,34 @@ void PrintRecursivelyTest() {
 	PrintRecursivelyInReverseOrder(list.getHead());
 
 	std::cout << std::endl;
+	std::cout << std::endl;
+}
+
+void ReverseTheListRecursively(Node* p, LinkList* list) {
+
+	while (p->next == nullptr)
+	{
+		list->updateHead(p);
+		return;
+	}
+	ReverseTheListRecursively(p->next, list);
+	p->next->next = p;
+	p->next = nullptr;
+}
+
+void ReverseTheListRecursivelyTest() {
+	std::cout << " --- Reverse The List Recursively --- " << std::endl;
+
+	LinkList list;
+
+	list.Insert(2);
+	list.Insert(4);
+	list.Insert(6);
+	list.Insert(5);
+
+	PrintList(list);
+
+	ReverseTheListRecursively(list.getHead(), &list);
+
+	PrintList(list);
 }
