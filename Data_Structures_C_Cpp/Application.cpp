@@ -9,6 +9,7 @@ int main(int argc, char** args) {
 	LinkedListTest::ReverseTheListTest();
 	LinkedListTest::PrintRecursivelyTest();
 	LinkedListTest::ReverseTheListRecursivelyTest();
+	LinkedListTest::getMiddleElementTest();
 
 	return 0;
 }

@@ -13,15 +13,15 @@ private:
 public:
 	LinkedList();
 	Node* getHead();
-	void updateHead(Node* p) {
-		m_head = p;
-	}
+	void updateHead(Node* p);
 	int getElement(int index);
 	void Insert(int data, int index);
 	void Insert(int data);
 	void Delete(int index);
 	void Reverse();
 	void Traverse(void(*callback)(int data), void(*callbackStart)(), void(*callbackEnd)());
+
+	int getMiddleElement();
 };
 
 static class LinkedListTest {
@@ -36,4 +36,5 @@ public:
 	static void PrintRecursivelyTest();
 	static void ReverseTheListRecursively(Node* p, LinkedList* list);
 	static void ReverseTheListRecursivelyTest();
+	static void getMiddleElementTest();
 };

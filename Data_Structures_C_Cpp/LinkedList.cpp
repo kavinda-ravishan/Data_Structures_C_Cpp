@@ -1,6 +1,8 @@
 #include <iostream>
 #include "LinkedList.h"
 
+// --------------- Class --------------- //
+
 LinkedList::LinkedList() :m_head(nullptr) {}
 
 Node* LinkedList::getNthPointer(int index) {
@@ -14,6 +16,10 @@ Node* LinkedList::getNthPointer(int index) {
 
 Node* LinkedList::getHead() {
 	return m_head;
+}
+
+void LinkedList::updateHead(Node* p) {
+	m_head = p;
 }
 
 int LinkedList::getElement(int index) {
@@ -94,6 +100,23 @@ void LinkedList::Traverse(void(*callback)(int data), void(*callbackStart)(), voi
 	callbackEnd();
 }
 
+int LinkedList::getMiddleElement() {
+
+	if (m_head == nullptr) return 0;
+
+	Node* fast = m_head;
+	Node* slow = m_head;
+
+	while (fast->next != nullptr) {
+		fast = fast->next->next;
+		slow = slow->next;
+		if (fast == nullptr) break;
+	}
+
+	return slow->data;
+}
+
+// --------------- Test --------------- //
 
 void LinkedListTest::PrintList(LinkedList list) {
 	list.Traverse(
@@ -248,5 +271,26 @@ void LinkedListTest::ReverseTheListRecursivelyTest() {
 	ReverseTheListRecursively(list.getHead(), &list);
 
 	PrintList(list);
+
+	std::cout << std::endl;
 }
 
+void LinkedListTest::getMiddleElementTest()
+{
+	std::cout << " --- Get Middle ElementT --- " << std::endl;
+
+	LinkedList list;
+
+	list.Insert(1);
+	list.Insert(2);
+	list.Insert(3);
+	list.Insert(4);
+	list.Insert(5);
+	list.Insert(6);
+	list.Insert(7);
+
+	LinkedListTest::PrintList(list);
+
+	std::cout << "Middle Element : " << list.getMiddleElement() << std::endl;
+	std::cout << std::endl;
+}
