@@ -5,16 +5,9 @@
 
 int main(int argc, char** args) {
 	
-	SinglyLinkedListTest::InsertToHeadTest();
-	SinglyLinkedListTest::InsertToNthNodeTest();
-	SinglyLinkedListTest::DeleteNthNodeTest();
-	SinglyLinkedListTest::ReverseTheListTest();
-	SinglyLinkedListTest::PrintRecursivelyTest();
-	SinglyLinkedListTest::ReverseTheListRecursivelyTest();
-	SinglyLinkedListTest::getMiddleElementTest();
+	SinglyLinkedListTest::TestAll();
 
-	DoublyLinkedListTest::InsetAtHeadTest();
-	DoublyLinkedListTest::InsetAtTailTest();
+	DoublyLinkedListTest::TestAll();
 
 	return 0;
 }

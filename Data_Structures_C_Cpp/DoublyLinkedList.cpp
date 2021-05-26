@@ -4,7 +4,7 @@
 // --------------- Class --------------- //
 
 template<typename T>
-NodeD<T>* DoublyLinkedList<T>::getNewNode(T data)
+NodeD<T>* DoublyLinkedList<T>::GetNewNode(T data)
 {
 	NodeD<T>* newNodePtr = new NodeD<T>;
 	newNodePtr->nextPtr = nullptr;
@@ -49,9 +49,9 @@ void DoublyLinkedList<T>::TraverseTailToHead(void(*callback)(T data), void(*call
 }
 
 template<typename T>
-void DoublyLinkedList<T>::insertAtHead(T data) {
+void DoublyLinkedList<T>::InsertAtHead(T data) {
 
-	NodeD<T>* newNodePtr = getNewNode(data);
+	NodeD<T>* newNodePtr = GetNewNode(data);
 
 	if (m_headPtr == nullptr) {
 		m_headPtr = newNodePtr;
@@ -64,9 +64,9 @@ void DoublyLinkedList<T>::insertAtHead(T data) {
 }
 
 template<typename T>
-void DoublyLinkedList<T>::insertAtTail(T data)
+void DoublyLinkedList<T>::InsertAtTail(T data)
 {
-	NodeD<T>* newNodePtr = getNewNode(data);
+	NodeD<T>* newNodePtr = GetNewNode(data);
 
 	if (m_headPtr == nullptr) {
 		m_headPtr = newNodePtr;
@@ -104,9 +104,9 @@ void DoublyLinkedListTest::InsetAtHeadTest() {
 
 	DoublyLinkedList<double> list;
 
-	list.insertAtHead(10.1);
-	list.insertAtHead(20.2);
-	list.insertAtHead(30.3);
+	list.InsertAtHead(10.1);
+	list.InsertAtHead(20.2);
+	list.InsertAtHead(30.3);
 
 	PrintListHeadToTail<double>(list);
 	PrintListTailToHead<double>(list);
@@ -120,12 +120,18 @@ void DoublyLinkedListTest::InsetAtTailTest()
 
 	DoublyLinkedList<double> list;
 
-	list.insertAtTail(101.1);
-	list.insertAtTail(202.2);
-	list.insertAtTail(303.3);
+	list.InsertAtTail(101.1);
+	list.InsertAtTail(202.2);
+	list.InsertAtTail(303.3);
 
 	PrintListHeadToTail<double>(list);
 	PrintListTailToHead<double>(list);
 
 	std::cout << std::endl;
+}
+
+void DoublyLinkedListTest::TestAll()
+{
+	InsetAtHeadTest();
+	InsetAtTailTest();
 }

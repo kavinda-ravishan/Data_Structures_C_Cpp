@@ -14,15 +14,15 @@ NodeS* SinglyLinkedList::getNthPointer(int index) {
 	return temp;
 }
 
-NodeS* SinglyLinkedList::getHead() {
+NodeS* SinglyLinkedList::GetHead() {
 	return m_head;
 }
 
-void SinglyLinkedList::updateHead(NodeS* p) {
+void SinglyLinkedList::UpdateHead(NodeS* p) {
 	m_head = p;
 }
 
-int SinglyLinkedList::getElement(int index) {
+int SinglyLinkedList::GetElement(int index) {
 
 	return getNthPointer(index)->data;
 }
@@ -100,7 +100,7 @@ void SinglyLinkedList::Traverse(void(*callback)(int data), void(*callbackStart)(
 	callbackEnd();
 }
 
-int SinglyLinkedList::getMiddleElement() {
+int SinglyLinkedList::GetMiddleElement() {
 
 	if (m_head == nullptr) return 0;
 
@@ -143,7 +143,7 @@ void SinglyLinkedListTest::InsertToHeadTest() {
 
 	int index = 0;
 
-	std::cout << "Value of index ( " << index << " ) : " << list.getElement(0) << std::endl;
+	std::cout << "Value of index ( " << index << " ) : " << list.GetElement(0) << std::endl;
 	std::cout << std::endl;
 }
 
@@ -233,12 +233,12 @@ void SinglyLinkedListTest::PrintRecursivelyTest() {
 	list.Insert(5);
 
 	std::cout << "List : ";
-	PrintRecursively(list.getHead());
+	PrintRecursively(list.GetHead());
 
 	std::cout << std::endl;
 
 	std::cout << "List In Reverse Order: ";
-	PrintRecursivelyInReverseOrder(list.getHead());
+	PrintRecursivelyInReverseOrder(list.GetHead());
 
 	std::cout << std::endl;
 	std::cout << std::endl;
@@ -248,7 +248,7 @@ void SinglyLinkedListTest::ReverseTheListRecursively(NodeS* p, SinglyLinkedList*
 
 	while (p->next == nullptr)
 	{
-		list->updateHead(p);
+		list->UpdateHead(p);
 		return;
 	}
 	ReverseTheListRecursively(p->next, list);
@@ -268,14 +268,14 @@ void SinglyLinkedListTest::ReverseTheListRecursivelyTest() {
 
 	PrintList(list);
 
-	ReverseTheListRecursively(list.getHead(), &list);
+	ReverseTheListRecursively(list.GetHead(), &list);
 
 	PrintList(list);
 
 	std::cout << std::endl;
 }
 
-void SinglyLinkedListTest::getMiddleElementTest()
+void SinglyLinkedListTest::GetMiddleElementTest()
 {
 	std::cout << " --- Get Middle ElementT --- " << std::endl;
 
@@ -291,6 +291,17 @@ void SinglyLinkedListTest::getMiddleElementTest()
 
 	SinglyLinkedListTest::PrintList(list);
 
-	std::cout << "Middle Element : " << list.getMiddleElement() << std::endl;
+	std::cout << "Middle Element : " << list.GetMiddleElement() << std::endl;
 	std::cout << std::endl;
+}
+
+void SinglyLinkedListTest::TestAll()
+{
+	InsertToHeadTest();
+	InsertToNthNodeTest();
+	DeleteNthNodeTest();
+	ReverseTheListTest();
+	PrintRecursivelyTest();
+	ReverseTheListRecursivelyTest();
+	GetMiddleElementTest();
 }

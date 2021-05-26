@@ -14,17 +14,14 @@ class DoublyLinkedList {
 private:
 	NodeD<T>* m_headPtr;
 	NodeD<T>* m_tailPtr;
-	NodeD<T>* getNewNode(T data);
+	NodeD<T>* GetNewNode(T data);
 public:
 	DoublyLinkedList();
 
 	void TraverseHeadToTail(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)());
-
 	void TraverseTailToHead(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)());
-
-	void insertAtHead(T data);
-
-	void insertAtTail(T data);
+	void InsertAtHead(T data);
+	void InsertAtTail(T data);
 };
 
 static class DoublyLinkedListTest {
@@ -35,4 +32,5 @@ public:
 	static void PrintListTailToHead(DoublyLinkedList<T> list);
 	static void InsetAtHeadTest();
 	static void InsetAtTailTest();
+	static void TestAll();
 };
