@@ -17,21 +17,23 @@ protected:
 	Node<T>* m_headPtr;
 	Node<T>* m_tailPtr;
 	int m_size;
-	Node<T>* GetANewNode(T data);
+	Node<T>* GetANewNode(T data) const;
+	Node<T>* GetNthPtr(int index) const;
 public:
 	LinkedList();
-	int GetSize();
-	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)());
+	int GetSize() const;
+	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 };
 
 template <typename T>
 class Stack : public LinkedList<T>{
 public:
 	void Push(T data);
+	void Pop();
 };
 
 template <typename T>
-class Array :public Stack<T>{};
+class List :public Stack<T>{};
 
 int main(int argc, char** args) {
 
@@ -48,18 +50,38 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 
-	Array<int> arr;
-	arr.Push(10);
-	arr.Push(20);
-	arr.Push(40);
-	arr.Push(50);
-	std::cout << "Size : " << arr.GetSize() << std::endl;
-	arr.Traverse(
-		[](int data) {std::cout << data << " "; },
+	List<char> list;
+	list.Push('a');
+	list.Push('b');
+	list.Push('c');
+	std::cout << "Size : " << list.GetSize() << std::endl;
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
 	
+	list.Pop();
+	std::cout << "Size : " << list.GetSize() << std::endl;
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Push('a');
+	list.Push('b');
+	list.Push('c');
+	std::cout << "Size : " << list.GetSize() << std::endl;
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+
 	return 0;
 }
 
@@ -69,19 +91,31 @@ template<typename T>
 LinkedList<T>::LinkedList() :m_headPtr(nullptr), m_tailPtr(nullptr), m_size(0) {}
 
 template<typename T>
-Node<T>* LinkedList<T>::GetANewNode(T data)
+Node<T>* LinkedList<T>::GetANewNode(T data) const
 {
 	return new Node<T>(data);
 }
 
 template<typename T>
-int LinkedList<T>::GetSize()
+Node<T>* LinkedList<T>::GetNthPtr(int index) const
+{
+	Node<T> *temp = this->m_headPtr;
+	for (int i = 0; i < index; i++)
+	{
+		temp = temp->nextPtr;
+	}
+
+	return temp;
+}
+
+template<typename T>
+int LinkedList<T>::GetSize() const
 {
 	return m_size;
 }
 
 template<typename T>
-void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)())
+void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
 {
 	callbackStart();
 
@@ -112,4 +146,23 @@ void Stack<T>::Push(T data)
 	this->m_tailPtr = newNodePtr;
 }
 
-// --- Array --- //
+template<typename T>
+void Stack<T>::Pop()
+{
+	if (this->m_headPtr == nullptr) return;
+	
+	this->m_size--;
+
+	if (this->m_headPtr->nextPtr == nullptr) {
+		delete this->m_tailPtr;
+		this->m_headPtr = nullptr;
+		this->m_tailPtr = nullptr;
+		return;
+	}
+
+	delete this->m_tailPtr;
+	this->m_tailPtr = this->GetNthPtr(this->m_size - 1);
+	this->m_tailPtr->nextPtr = nullptr;
+}
+
+// --- List --- //
