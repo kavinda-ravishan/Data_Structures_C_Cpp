@@ -1,17 +1,17 @@
 #include <iostream>
-#include "LinkedList.h"
+#include "SinglyLinkedList.h"
 #include "DoublyLinkedList.h"
 
 
 int main(int argc, char** args) {
 	
-	LinkedListTest::InsertToHeadTest();
-	LinkedListTest::InsertToNthNodeTest();
-	LinkedListTest::DeleteNthNodeTest();
-	LinkedListTest::ReverseTheListTest();
-	LinkedListTest::PrintRecursivelyTest();
-	LinkedListTest::ReverseTheListRecursivelyTest();
-	LinkedListTest::getMiddleElementTest();
+	SinglyLinkedListTest::InsertToHeadTest();
+	SinglyLinkedListTest::InsertToNthNodeTest();
+	SinglyLinkedListTest::DeleteNthNodeTest();
+	SinglyLinkedListTest::ReverseTheListTest();
+	SinglyLinkedListTest::PrintRecursivelyTest();
+	SinglyLinkedListTest::ReverseTheListRecursivelyTest();
+	SinglyLinkedListTest::getMiddleElementTest();
 
 	DoublyLinkedListTest::InsetAtHeadTest();
 	DoublyLinkedListTest::InsetAtTailTest();

@@ -1,43 +1,43 @@
 #include <iostream>
-#include "LinkedList.h"
+#include "SinglyLinkedList.h"
 
 // --------------- Class --------------- //
 
-LinkedList::LinkedList() :m_head(nullptr) {}
+SinglyLinkedList::SinglyLinkedList() :m_head(nullptr) {}
 
-Node* LinkedList::getNthPointer(int index) {
+NodeS* SinglyLinkedList::getNthPointer(int index) {
 
-	Node* temp = m_head;
+	NodeS* temp = m_head;
 	for (int i = 0; i < index; i++) {
 		temp = temp->next;
 	}
 	return temp;
 }
 
-Node* LinkedList::getHead() {
+NodeS* SinglyLinkedList::getHead() {
 	return m_head;
 }
 
-void LinkedList::updateHead(Node* p) {
+void SinglyLinkedList::updateHead(NodeS* p) {
 	m_head = p;
 }
 
-int LinkedList::getElement(int index) {
+int SinglyLinkedList::getElement(int index) {
 
 	return getNthPointer(index)->data;
 }
 
-void LinkedList::Insert(int data) {
+void SinglyLinkedList::Insert(int data) {
 
-	Node* temp = new Node;
+	NodeS* temp = new NodeS;
 	temp->data = data;
 	temp->next = m_head;
 	m_head = temp;
 }
 
-void LinkedList::Insert(int data, int index) {
+void SinglyLinkedList::Insert(int data, int index) {
 
-	Node *temp = new Node();
+	NodeS *temp = new NodeS();
 	temp->data = data;
 	temp->next = nullptr;
 
@@ -47,32 +47,32 @@ void LinkedList::Insert(int data, int index) {
 		return;
 	}
 
-	Node* temp2 = getNthPointer(index - 1);
+	NodeS* temp2 = getNthPointer(index - 1);
 	temp->next = temp2->next;
 	temp2->next = temp;
 }
 
-void LinkedList::Delete(int index) {
+void SinglyLinkedList::Delete(int index) {
 
 	if (index == 0) {
-		Node* temp = m_head;
+		NodeS* temp = m_head;
 		m_head = temp->next;
 		delete temp;
 		return;
 	}
 
-	Node* temp = getNthPointer(index - 1);
-	Node* temp2 = temp->next;
+	NodeS* temp = getNthPointer(index - 1);
+	NodeS* temp2 = temp->next;
 
 	temp->next = temp2->next;
 	delete temp2;
 }
 
-void LinkedList::Reverse() {
+void SinglyLinkedList::Reverse() {
 
-	Node* current = m_head;
-	Node* prev = nullptr;
-	Node* next = nullptr;
+	NodeS* current = m_head;
+	NodeS* prev = nullptr;
+	NodeS* next = nullptr;
 
 	while (current != nullptr)
 	{
@@ -85,11 +85,11 @@ void LinkedList::Reverse() {
 	m_head = prev;
 }
 
-void LinkedList::Traverse(void(*callback)(int data), void(*callbackStart)(), void(*callbackEnd)()) {
+void SinglyLinkedList::Traverse(void(*callback)(int data), void(*callbackStart)(), void(*callbackEnd)()) {
 
 	callbackStart();
 
-	Node* temp = m_head;
+	NodeS* temp = m_head;
 
 	while (temp != nullptr) {
 
@@ -100,12 +100,12 @@ void LinkedList::Traverse(void(*callback)(int data), void(*callbackStart)(), voi
 	callbackEnd();
 }
 
-int LinkedList::getMiddleElement() {
+int SinglyLinkedList::getMiddleElement() {
 
 	if (m_head == nullptr) return 0;
 
-	Node* fast = m_head;
-	Node* slow = m_head;
+	NodeS* fast = m_head;
+	NodeS* slow = m_head;
 
 	while (fast->next != nullptr) {
 		fast = fast->next->next;
@@ -118,7 +118,7 @@ int LinkedList::getMiddleElement() {
 
 // --------------- Test --------------- //
 
-void LinkedListTest::PrintList(LinkedList list) {
+void SinglyLinkedListTest::PrintList(SinglyLinkedList list) {
 	list.Traverse(
 		[](int data) { std::cout << data << " "; },
 		[]() { std::cout << "List : "; },
@@ -126,11 +126,11 @@ void LinkedListTest::PrintList(LinkedList list) {
 	);
 }
 
-void LinkedListTest::InsertToHeadTest() {
+void SinglyLinkedListTest::InsertToHeadTest() {
 
 	std::cout << " --- Insert To Head --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2);
 	PrintList(list);
@@ -147,11 +147,11 @@ void LinkedListTest::InsertToHeadTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::InsertToNthNodeTest() {
+void SinglyLinkedListTest::InsertToNthNodeTest() {
 
 	std::cout << " --- Insert To Nth Node --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2, 0);
 	PrintList(list);
@@ -165,11 +165,11 @@ void LinkedListTest::InsertToNthNodeTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::DeleteNthNodeTest() {
+void SinglyLinkedListTest::DeleteNthNodeTest() {
 
 	std::cout << " --- Delete Nth Node --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2);
 	list.Insert(4);
@@ -189,11 +189,11 @@ void LinkedListTest::DeleteNthNodeTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::ReverseTheListTest() {
+void SinglyLinkedListTest::ReverseTheListTest() {
 
 	std::cout << " --- Reverse The List --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2);
 	list.Insert(4);
@@ -207,25 +207,25 @@ void LinkedListTest::ReverseTheListTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::PrintRecursively(Node* p) {
+void SinglyLinkedListTest::PrintRecursively(NodeS* p) {
 
 	if (p == nullptr) return;
 	std::cout << p->data << " ";
 	PrintRecursively(p->next);
 }
 
-void LinkedListTest::PrintRecursivelyInReverseOrder(Node* p) {
+void SinglyLinkedListTest::PrintRecursivelyInReverseOrder(NodeS* p) {
 
 	if (p == nullptr) return;
 	PrintRecursivelyInReverseOrder(p->next);
 	std::cout << p->data << " ";
 }
 
-void LinkedListTest::PrintRecursivelyTest() {
+void SinglyLinkedListTest::PrintRecursivelyTest() {
 
 	std::cout << " --- Print Recursively --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2);
 	list.Insert(4);
@@ -244,7 +244,7 @@ void LinkedListTest::PrintRecursivelyTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::ReverseTheListRecursively(Node* p, LinkedList* list) {
+void SinglyLinkedListTest::ReverseTheListRecursively(NodeS* p, SinglyLinkedList* list) {
 
 	while (p->next == nullptr)
 	{
@@ -256,10 +256,10 @@ void LinkedListTest::ReverseTheListRecursively(Node* p, LinkedList* list) {
 	p->next = nullptr;
 }
 
-void LinkedListTest::ReverseTheListRecursivelyTest() {
+void SinglyLinkedListTest::ReverseTheListRecursivelyTest() {
 	std::cout << " --- Reverse The List Recursively --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(2);
 	list.Insert(4);
@@ -275,11 +275,11 @@ void LinkedListTest::ReverseTheListRecursivelyTest() {
 	std::cout << std::endl;
 }
 
-void LinkedListTest::getMiddleElementTest()
+void SinglyLinkedListTest::getMiddleElementTest()
 {
 	std::cout << " --- Get Middle ElementT --- " << std::endl;
 
-	LinkedList list;
+	SinglyLinkedList list;
 
 	list.Insert(1);
 	list.Insert(2);
@@ -289,7 +289,7 @@ void LinkedListTest::getMiddleElementTest()
 	list.Insert(6);
 	list.Insert(7);
 
-	LinkedListTest::PrintList(list);
+	SinglyLinkedListTest::PrintList(list);
 
 	std::cout << "Middle Element : " << list.getMiddleElement() << std::endl;
 	std::cout << std::endl;

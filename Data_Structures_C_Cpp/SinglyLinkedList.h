@@ -1,19 +1,19 @@
 #pragma once
 
-struct Node
+struct NodeS
 {
-	Node* next;
+	NodeS* next;
 	int data;
 };
 
-class LinkedList {
+class SinglyLinkedList {
 private:
-	Node* m_head;
-	Node* getNthPointer(int index);
+	NodeS* m_head;
+	NodeS* getNthPointer(int index);
 public:
-	LinkedList();
-	Node* getHead();
-	void updateHead(Node* p);
+	SinglyLinkedList();
+	NodeS* getHead();
+	void updateHead(NodeS* p);
 	int getElement(int index);
 	void Insert(int data, int index);
 	void Insert(int data);
@@ -24,17 +24,17 @@ public:
 	int getMiddleElement();
 };
 
-static class LinkedListTest {
+static class SinglyLinkedListTest {
 public:
-	static void PrintList(LinkedList list);
+	static void PrintList(SinglyLinkedList list);
 	static void InsertToHeadTest();
 	static void InsertToNthNodeTest();
 	static void DeleteNthNodeTest();
 	static void ReverseTheListTest();
-	static void PrintRecursively(Node* p);
-	static void PrintRecursivelyInReverseOrder(Node* p);
+	static void PrintRecursively(NodeS* p);
+	static void PrintRecursivelyInReverseOrder(NodeS* p);
 	static void PrintRecursivelyTest();
-	static void ReverseTheListRecursively(Node* p, LinkedList* list);
+	static void ReverseTheListRecursively(NodeS* p, SinglyLinkedList* list);
 	static void ReverseTheListRecursivelyTest();
 	static void getMiddleElementTest();
 };
