@@ -23,7 +23,11 @@ public:
 
 template <typename T>
 class Stack : public LinkedList<T>{
+private:
+	bool m_isEmpty;
 public:
+	Stack();
+	bool isEmpty() const;
 	void Push(T data);
 	void Pop();
 };
@@ -48,7 +52,21 @@ int main(int argc, char** args) {
 		[]() {std::cout << "List : "; }, 
 		[]() {std::cout << std::endl; }
 	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
 	
+
+	stack.Pop();
+	stack.Pop();
+	stack.Pop();
+	stack.Pop();
+	stack.Pop();
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+
 	List<char> list;
 	list.Push('a');
 	list.Push('b');
@@ -58,6 +76,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
 	
 	list.Pop();
 	list.Traverse(
@@ -65,6 +84,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
 
 	list.Pop();
 	list.Pop();
@@ -77,6 +97,17 @@ int main(int argc, char** args) {
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
 	
 	return 0;
 }
@@ -111,11 +142,22 @@ void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), vo
 // --- Stack --- //
 
 template<typename T>
+Stack<T>::Stack():m_isEmpty(true){}
+
+template<typename T>
+bool Stack<T>::isEmpty() const
+{
+	return m_isEmpty;
+}
+
+template<typename T>
 void Stack<T>::Push(T data)
 {
 	Node<T>* newNodePtr = this->GetANewNode(data);
 	newNodePtr->nextPtr = this->m_headPtr;
 	this->m_headPtr = newNodePtr;
+
+	m_isEmpty = false;
 }
 
 template<typename T>
@@ -125,6 +167,8 @@ void Stack<T>::Pop()
 	if (this->m_headPtr == nullptr) return;
 	this->m_headPtr = this->m_headPtr->nextPtr;
 	delete deleteNode;
+
+	if(this->m_headPtr == nullptr) m_isEmpty = true;
 }
 
 // --- List --- //
