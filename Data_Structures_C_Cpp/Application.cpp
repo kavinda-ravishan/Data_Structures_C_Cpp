@@ -6,9 +6,9 @@ template <typename T>
 struct Node
 {
 	T m_data;
-	Node<T>* nextPtr;
+	Node<T>* m_nextPtr;
 
-	Node(T data):nextPtr(nullptr),m_data(data){}
+	Node(T data):m_nextPtr(nullptr),m_data(data){}
 };
 
 template <typename T>
@@ -30,6 +30,7 @@ public:
 	bool isEmpty() const;
 	void Push(T data);
 	void Pop();
+	T Top() const;
 };
 
 template <typename T>
@@ -53,6 +54,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
 	
 
 	stack.Pop();
@@ -66,6 +68,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
 
 	List<char> list;
 	list.Push('a');
@@ -77,6 +80,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
 	
 	list.Pop();
 	list.Traverse(
@@ -85,6 +89,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
 
 	list.Pop();
 	list.Pop();
@@ -98,7 +103,10 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
 
+	list.Pop();
+	list.Pop();
 	list.Pop();
 	list.Pop();
 	list.Pop();
@@ -108,6 +116,7 @@ int main(int argc, char** args) {
 		[]() {std::cout << std::endl; }
 	);
 	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
 	
 	return 0;
 }
@@ -133,7 +142,7 @@ void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), vo
 	while (ptr != nullptr)
 	{
 		callback(ptr->m_data);
-		ptr = ptr->nextPtr;
+		ptr = ptr->m_nextPtr;
 	}
 
 	callbackEnd();
@@ -154,7 +163,7 @@ template<typename T>
 void Stack<T>::Push(T data)
 {
 	Node<T>* newNodePtr = this->GetANewNode(data);
-	newNodePtr->nextPtr = this->m_headPtr;
+	newNodePtr->m_nextPtr = this->m_headPtr;
 	this->m_headPtr = newNodePtr;
 
 	m_isEmpty = false;
@@ -165,10 +174,17 @@ void Stack<T>::Pop()
 {
 	Node<T>* deleteNode = this->m_headPtr;
 	if (this->m_headPtr == nullptr) return;
-	this->m_headPtr = this->m_headPtr->nextPtr;
+	this->m_headPtr = this->m_headPtr->m_nextPtr;
 	delete deleteNode;
 
 	if(this->m_headPtr == nullptr) m_isEmpty = true;
+}
+
+template<typename T>
+T Stack<T>::Top() const
+{
+	if (this->m_headPtr == nullptr) return T();
+	return this->m_headPtr->m_data;
 }
 
 // --- List --- //
@@ -179,7 +195,7 @@ Node<T>* List<T>::GetNthPtr(int index) const
 	Node<T> *temp = this->m_headPtr;
 	for (int i = 0; i < index; i++)
 	{
-		temp = temp->nextPtr;
+		temp = temp->m_nextPtr;
 	}
 
 	return temp;
