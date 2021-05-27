@@ -23,10 +23,7 @@ public:
 
 template <typename T>
 class Stack : public LinkedList<T>{
-private:
-	bool m_isEmpty;
 public:
-	Stack();
 	bool isEmpty() const;
 	void Push(T data);
 	void Pop();
@@ -54,8 +51,19 @@ int main(int argc, char** args) {
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 	
-	for (int i = 0; i < 5; i++) {
+	for (int i = 0; i < 30; i++) {
 		stack.Pop();
+	}
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
+
+	for (int i = 0; i < 20; i++) {
+		stack.Push(i * 10);
 	}
 	stack.Traverse(
 		[](int data) {std::cout << data << " "; },
@@ -146,12 +154,11 @@ void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), vo
 // --- Stack --- //
 
 template<typename T>
-Stack<T>::Stack():m_isEmpty(true){}
-
-template<typename T>
 bool Stack<T>::isEmpty() const
 {
-	return m_isEmpty;
+	if (this->m_headPtr == nullptr) return true;
+	else return false;
+
 }
 
 template<typename T>
@@ -160,8 +167,6 @@ void Stack<T>::Push(T data)
 	Node<T>* newNodePtr = this->GetANewNode(data);
 	newNodePtr->m_nextPtr = this->m_headPtr;
 	this->m_headPtr = newNodePtr;
-
-	m_isEmpty = false;
 }
 
 template<typename T>
@@ -171,8 +176,6 @@ void Stack<T>::Pop()
 	if (this->m_headPtr == nullptr) return;
 	this->m_headPtr = this->m_headPtr->m_nextPtr;
 	delete deleteNode;
-
-	if(this->m_headPtr == nullptr) m_isEmpty = true;
 }
 
 template<typename T>
