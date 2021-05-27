@@ -19,6 +19,7 @@ protected:
 public:
 	LinkedList();
 	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
+	void Traverse(T(*callback)(T data, int index)) const;
 };
 
 template <typename T>
@@ -51,6 +52,14 @@ int main(int argc, char** args) {
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 	
+	stack.Traverse([](int data, int index) { return data + index; });
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+
 	for (int i = 0; i < 30; i++) {
 		stack.Pop();
 	}
@@ -149,6 +158,20 @@ void LinkedList<T>::Traverse(void(*callback)(T data), void(*callbackStart)(), vo
 	}
 
 	callbackEnd();
+}
+
+template<typename T>
+void LinkedList<T>::Traverse(T(*callback)(T data, int index)) const
+{
+	int index = 0;
+	Node<T>* ptr = m_headPtr;
+
+	while (ptr != nullptr)
+	{
+		ptr->m_data = callback(ptr->m_data, index);
+		ptr = ptr->m_nextPtr;
+		index++;
+	}
 }
 
 // --- Stack --- //
