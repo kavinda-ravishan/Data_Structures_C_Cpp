@@ -43,11 +43,9 @@ int main(int argc, char** args) {
 	
 
 	Stack<int> stack;
-	stack.Push(10);
-	stack.Push(20);
-	stack.Push(30);
-	stack.Push(40);
-	stack.Push(50);
+	for (int i = 0; i < 20; i++) {
+		stack.Push(i*11);
+	}
 	stack.Traverse(
 		[](int data) {std::cout << data << " "; }, 
 		[]() {std::cout << "List : "; }, 
@@ -56,12 +54,9 @@ int main(int argc, char** args) {
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 	
-
-	stack.Pop();
-	stack.Pop();
-	stack.Pop();
-	stack.Pop();
-	stack.Pop();
+	for (int i = 0; i < 5; i++) {
+		stack.Pop();
+	}
 	stack.Traverse(
 		[](int data) {std::cout << data << " "; },
 		[]() {std::cout << "List : "; },
