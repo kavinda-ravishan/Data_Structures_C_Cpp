@@ -172,8 +172,9 @@ void Stack<T>::Push(T data)
 template<typename T>
 void Stack<T>::Pop()
 {
-	Node<T>* deleteNode = this->m_headPtr;
 	if (this->m_headPtr == nullptr) return;
+
+	Node<T>* deleteNode = this->m_headPtr;
 	this->m_headPtr = this->m_headPtr->m_nextPtr;
 	delete deleteNode;
 }
