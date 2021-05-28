@@ -1,0 +1,9 @@
+﻿  Application.cpp
+  DoublyLinkedList.cpp
+e:\projects\git_projects\data_structures_c_cpp\data_structures_c_cpp\doublylinkedlist.h(36): warning C4091: 'static ': ignored on left of 'DoublyLinkedListTest' when no variable is declared
+  SinglyLinkedList.cpp
+e:\projects\git_projects\data_structures_c_cpp\data_structures_c_cpp\singlylinkedlist.h(40): warning C4091: 'static ': ignored on left of 'SinglyLinkedListTest' when no variable is declared
+  Generating code
+  All 80 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Finished generating code
+  Data_Structures_C_Cpp.vcxproj -> E:\Projects\Git_Projects\Data_Structures_C_Cpp\Release\Data_Structures_C_Cpp.exe

@@ -29,6 +29,7 @@ public:
 	void Push(T data);
 	void Pop();
 	T Top() const;
+	void Reverse();
 };
 
 template <typename T>
@@ -37,99 +38,11 @@ private:
 	Node<T>* GetNthPtr(int index) const;
 };
 
+void Test();
+
 int main(int argc, char** args) {
 	
-
-	Stack<int> stack;
-	for (int i = 0; i < 20; i++) {
-		stack.Push(i*11);
-	}
-	stack.Traverse(
-		[](int data) {std::cout << data << " "; }, 
-		[]() {std::cout << "List : "; }, 
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
-	std::cout << "Top : " << stack.Top() << std::endl;
-	
-	stack.Traverse([](int data, int index) { return data + index; });
-	stack.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-
-	for (int i = 0; i < 30; i++) {
-		stack.Pop();
-	}
-	stack.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
-	std::cout << "Top : " << stack.Top() << std::endl;
-
-	for (int i = 0; i < 20; i++) {
-		stack.Push(i * 10);
-	}
-	stack.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
-	std::cout << "Top : " << stack.Top() << std::endl;
-
-	List<char> list;
-	list.Push('a');
-	list.Push('b');
-	list.Push('c');
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-	
-	list.Pop();
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Push('a');
-	list.Push('b');
-	list.Push('c');
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-	
+	Test();
 	return 0;
 }
 
@@ -198,6 +111,7 @@ void Stack<T>::Pop()
 	if (this->m_headPtr == nullptr) return;
 
 	Node<T>* deleteNode = this->m_headPtr;
+	T data = deleteNode->m_data;
 	this->m_headPtr = this->m_headPtr->m_nextPtr;
 	delete deleteNode;
 }
@@ -207,6 +121,30 @@ T Stack<T>::Top() const
 {
 	if (this->m_headPtr == nullptr) return T();
 	return this->m_headPtr->m_data;
+}
+
+template<typename T>
+void Stack<T>::Reverse()
+{
+	Stack<Node<T>*> stack;
+	Node<T>* tempPtr = this->m_headPtr;
+	
+	while (tempPtr != nullptr)
+	{
+		stack.Push(tempPtr);
+		tempPtr = tempPtr->m_nextPtr;
+	}
+
+	tempPtr = stack.Top();
+	this->m_headPtr = tempPtr;
+	stack.Pop();
+	while (!stack.isEmpty())
+	{
+		tempPtr->m_nextPtr = stack.Top();
+		stack.Pop();
+		tempPtr = tempPtr->m_nextPtr;
+	}
+	tempPtr->m_nextPtr = nullptr;
 }
 
 // --- List --- //
@@ -222,3 +160,107 @@ Node<T>* List<T>::GetNthPtr(int index) const
 
 	return temp;
 }
+
+void Test()
+{
+	Stack<int> stack;
+	for (int i = 0; i < 20; i++) {
+		stack.Push(i * 11);
+	}
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
+
+	stack.Reverse();
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
+
+	stack.Traverse([](int data, int index) { return data + index; });
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	std::cout << "Poped items : ";
+	while(!stack.isEmpty()){
+		stack.Pop();
+	}
+	std::cout << std::endl;
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
+
+	for (int i = 0; i < 20; i++) {
+		stack.Push(i * 10);
+	}
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Top : " << stack.Top() << std::endl;
+
+	List<char> list;
+	list.Push('a');
+	list.Push('b');
+	list.Push('c');
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
+
+	list.Pop();
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
+
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Push('a');
+	list.Push('b');
+	list.Push('c');
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
+
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Pop();
+	list.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
+	std::cout << "Top : " << list.Top() << std::endl;
+}
+
