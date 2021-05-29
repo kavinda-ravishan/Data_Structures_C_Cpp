@@ -39,83 +39,15 @@ private:
 };
 
 void Test();
+bool CheckBalancedParentheses(const char *expression, Stack<char> &stack);
+void CheckBalancedParenthesesTest();
 
 int main(int argc, char** args) {
 	
-	const char* name = "{ [ (a+b) + (b+c) ] }";
+	
+	CheckBalancedParenthesesTest();
+	Test();
 
-	int i = 0;
-
-	Stack<char> stack;
-
-	while (name[i] != 0)
-	{
-		char c = name[i];
-
-		if (c == '[' || c == ']' || c == '(' || c == ')' || c == '{' || c == '}') {
-			if (c == '[' || c == '(' || c == '{') {
-				stack.Push(c);
-
-				std::cout << "Pushed : " << c << " : ";
-				stack.Traverse(
-					[](char data) {std::cout << data << " "; },
-					[]() {std::cout << "List : "; },
-					[]() {std::cout << std::endl; }
-				);
-
-			}
-			else {
-				if (stack.isEmpty()) {
-					stack.Push(c);
-
-					std::cout << "Pushed : " << c << " : ";
-					stack.Traverse(
-						[](char data) {std::cout << data << " "; },
-						[]() {std::cout << "List : "; },
-						[]() {std::cout << std::endl; }
-					);
-
-					break;
-				}
-				else {
-					if (stack.Top() == '[' && c != ']') break;
-					else if (stack.Top() == '(' && c != ')') break;
-					else if (stack.Top() == '{' && c != '}') break;
-					else {
-						stack.Pop();
-
-						std::cout << "Poped : " << c << " : ";
-						stack.Traverse(
-							[](char data) {std::cout << data << " "; },
-							[]() {std::cout << "List : "; },
-							[]() {std::cout << std::endl; }
-						);
-
-					}
-				}
-			}
-		}
-
-		i++;
-	}
-	std::cout << std::endl;
-
-	if (stack.isEmpty()) {
-		std::cout << "Balanced" << std::endl;
-	}
-	else
-	{
-		std::cout << "Not Balanced" << std::endl;
-	}
-	stack.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-	std::cout << std::endl;
-
-	//Test();
 	return 0;
 }
 
@@ -337,3 +269,54 @@ void Test()
 	std::cout << "Top : " << list.Top() << std::endl;
 }
 
+bool CheckBalancedParentheses(const char *expression, Stack<char> &stack) {
+	int i = 0;
+
+	while (expression[i] != 0)
+	{
+		char c = expression[i];
+
+		if (c == '[' || c == ']' || c == '(' || c == ')' || c == '{' || c == '}') {
+			if (c == '[' || c == '(' || c == '{') {
+				stack.Push(c);
+			}
+			else {
+				if (stack.isEmpty()) {
+					stack.Push(c);
+					break;
+				}
+				else {
+					if (stack.Top() == '[' && c != ']') break;
+					else if (stack.Top() == '(' && c != ')') break;
+					else if (stack.Top() == '{' && c != '}') break;
+					else {
+						stack.Pop();
+					}
+				}
+			}
+		}
+
+		i++;
+	}
+
+	if (stack.isEmpty()) return true;
+	else return false;
+}
+
+void CheckBalancedParenthesesTest() {
+
+	Stack<char> stack;
+
+	const char* text = "{ [ (a+b) + (b+c) ] }";
+
+	CheckBalancedParentheses(text, stack);
+
+	if (stack.isEmpty()) {
+		std::cout << "Balanced" << std::endl;
+	}
+	else
+	{
+		std::cout << "Not Balanced" << std::endl;
+	}
+
+}
