@@ -39,14 +39,21 @@ private:
 };
 
 void Test();
+
 bool CheckBalancedParentheses(const char *expression, Stack<char> &stack);
 void CheckBalancedParenthesesTest();
 
+int charToInt(char c);
+int Operation(int operand_1, int operand_2, char operator_char);
+void PostfixEvaluation();
+void PrefixEvaluation();
+
 int main(int argc, char** args) {
 	
-	
-	CheckBalancedParenthesesTest();
-	Test();
+	PrefixEvaluation();
+	PostfixEvaluation();
+	//CheckBalancedParenthesesTest();
+	//Test();
 
 	return 0;
 }
@@ -319,4 +326,75 @@ void CheckBalancedParenthesesTest() {
 		std::cout << "Not Balanced" << std::endl;
 	}
 
+}
+
+int charToInt(char c) {
+
+	return (int)c - 48;
+}
+
+int Operation(int operand_1, int operand_2, char operator_char) {
+	if (operator_char == '+') return operand_1 + operand_2;
+	if (operator_char == '-') return operand_1 - operand_2;
+	if (operator_char == '*') return operand_1 * operand_2;
+}
+
+void PostfixEvaluation() {
+
+	char expression[] = { '2','3','*','5','4','*','+','9','-' };
+	//char expression[] = { '2','3','*','5','4','*','-'};
+
+	Stack<int> stack;
+
+	int size = sizeof(expression);
+	for (int i = 0; i < size; i++) {
+		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
+			stack.Push(charToInt(expression[i]));
+		}
+		else {
+			int operand_2 = stack.Top();
+			stack.Pop();
+			int operand_1 = stack.Top();
+			stack.Pop();
+
+			stack.Push(Operation(operand_1, operand_2, expression[i]));
+		}
+	}
+
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+}
+
+void PrefixEvaluation()
+{
+	char expression[] = { '-', '+', '*', '2','3', '*','5','4','9' };
+
+	Stack<int> stack;
+
+	int size = sizeof(expression);
+	for (int i = size - 1; i >= 0; i--) {
+
+
+		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
+			stack.Push(charToInt(expression[i]));
+		}
+		else {
+			int operand_1 = stack.Top();
+			stack.Pop();
+			int operand_2 = stack.Top();
+			stack.Pop();
+
+			stack.Push(Operation(operand_1, operand_2, expression[i]));
+		}
+
+	}
+
+	stack.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
 }
