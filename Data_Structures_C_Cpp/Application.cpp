@@ -32,12 +32,6 @@ public:
 	void Reverse();
 };
 
-template <typename T>
-class List :public Stack<T>{
-private:
-	Node<T>* GetNthPtr(int index) const;
-};
-
 void Test();
 
 bool CheckBalancedParentheses(const char *expression, Stack<char> &stack);
@@ -48,10 +42,81 @@ int Operation(int operand_1, int operand_2, char operator_char);
 void PostfixEvaluation();
 void PrefixEvaluation();
 
+void CycleDetectionAlgorithm();
+
+enum Operators
+{
+	Subtraction = 0,
+	Addition,
+	Division,
+	Multiplication,
+	Undefined
+};
+
+Operators GetOperator(char c) {
+
+	switch (c)
+	{
+	case '-':
+		return Operators::Subtraction;
+	case '+':
+		return Operators::Addition;
+	case '/':
+		return Operators::Division;
+	case '*':
+		return Operators::Multiplication;
+	default:
+		return Operators::Undefined;
+	}
+}
+
 int main(int argc, char** args) {
 	
-	PrefixEvaluation();
-	PostfixEvaluation();
+	// Infix to postfix
+	// operator precedence ( or order of oparation)
+	// 1. paracentesis () {} []
+	// 2. exponents ( right to left )
+	// 3. multiplication and division (left to right)
+	// 4. addition and subtraction (left to right)
+
+	//std::cout << GetOperator('-') << std::endl;
+
+	char expression[] = { '1','+','2','*','3','-','4','*','5' };
+	const int size = sizeof(expression);
+
+	Stack<char> postfix;
+	Stack<char> stack;
+
+	for (int i = 0; i < size; i++)
+	{
+		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
+			postfix.Push(expression[i]);
+		}
+		else {
+			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])))
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Push(expression[i]);
+		}
+	}
+	while (!stack.isEmpty())
+	{
+		postfix.Push(stack.Top());
+		stack.Pop();
+	}
+
+	postfix.Reverse();
+	postfix.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	//CycleDetectionAlgorithm();
+	//PrefixEvaluation();
+	//PostfixEvaluation();
 	//CheckBalancedParenthesesTest();
 	//Test();
 
@@ -159,19 +224,7 @@ void Stack<T>::Reverse()
 	tempPtr->m_nextPtr = nullptr;
 }
 
-// --- List --- //
 
-template<typename T>
-Node<T>* List<T>::GetNthPtr(int index) const
-{
-	Node<T> *temp = this->m_headPtr;
-	for (int i = 0; i < index; i++)
-	{
-		temp = temp->m_nextPtr;
-	}
-
-	return temp;
-}
 
 void Test()
 {
@@ -226,54 +279,6 @@ void Test()
 	);
 	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
-
-	List<char> list;
-	list.Push('a');
-	list.Push('b');
-	list.Push('c');
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-
-	list.Pop();
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Push('a');
-	list.Push('b');
-	list.Push('c');
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
-
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Pop();
-	list.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
-	std::cout << "Is the list Empty : " << list.isEmpty() << std::endl;
-	std::cout << "Top : " << list.Top() << std::endl;
 }
 
 bool CheckBalancedParentheses(const char *expression, Stack<char> &stack) {
@@ -397,4 +402,24 @@ void PrefixEvaluation()
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
+}
+
+void CycleDetectionAlgorithm() {
+	int x[] = { 1,4,3,5,6,1,2 };
+	//int x[] = { 1,4,2,3,5,6,2 };
+
+	int slow = x[0];
+	int fast = x[0];
+	while (true)
+	{
+		slow = x[slow];
+
+		fast = x[fast];
+		fast = x[fast];
+
+		if (fast == slow) {
+			std::cout << "Duplicate value : " << x[fast] << std::endl;
+			break;
+		}
+	}
 }
