@@ -81,7 +81,8 @@ int main(int argc, char** args) {
 
 	//std::cout << GetOperator('-') << std::endl;
 
-	char expression[] = { '1','+','2','*','3','-','4','*','5' };
+	//char expression[] = { '(','(','1','+','2',')','*','3','-','4',')','*','5' };
+	char expression[] = { '1','*','(','2','+','3',')' };
 	const int size = sizeof(expression);
 
 	Stack<char> postfix;
@@ -92,8 +93,19 @@ int main(int argc, char** args) {
 		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
 			postfix.Push(expression[i]);
 		}
+		else if (expression[i] == '(') {
+			stack.Push(expression[i]);
+		}
+		else if (expression[i] == ')') {
+			while (stack.Top() != '(')
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Pop();
+		}
 		else {
-			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])))
+			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(' )
 			{
 				postfix.Push(stack.Top());
 				stack.Pop();
