@@ -52,7 +52,6 @@ enum Operators
 	Multiplication,
 	Undefined
 };
-
 Operators GetOperator(char c) {
 
 	switch (c)
@@ -69,62 +68,12 @@ Operators GetOperator(char c) {
 		return Operators::Undefined;
 	}
 }
+void InfixToPostfix();
+
 
 int main(int argc, char** args) {
 	
-	// Infix to postfix
-	// operator precedence ( or order of oparation)
-	// 1. paracentesis () {} []
-	// 2. exponents ( right to left )
-	// 3. multiplication and division (left to right)
-	// 4. addition and subtraction (left to right)
-
-	//std::cout << GetOperator('-') << std::endl;
-
-	//char expression[] = { '(','(','1','+','2',')','*','3','-','4',')','*','5' };
-	char expression[] = { '1','*','(','2','+','3',')' };
-	const int size = sizeof(expression);
-
-	Stack<char> postfix;
-	Stack<char> stack;
-
-	for (int i = 0; i < size; i++)
-	{
-		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
-			postfix.Push(expression[i]);
-		}
-		else if (expression[i] == '(') {
-			stack.Push(expression[i]);
-		}
-		else if (expression[i] == ')') {
-			while (stack.Top() != '(')
-			{
-				postfix.Push(stack.Top());
-				stack.Pop();
-			}
-			stack.Pop();
-		}
-		else {
-			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(' )
-			{
-				postfix.Push(stack.Top());
-				stack.Pop();
-			}
-			stack.Push(expression[i]);
-		}
-	}
-	while (!stack.isEmpty())
-	{
-		postfix.Push(stack.Top());
-		stack.Pop();
-	}
-
-	postfix.Reverse();
-	postfix.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
-	);
+	InfixToPostfix();
 
 	//CycleDetectionAlgorithm();
 	//PrefixEvaluation();
@@ -434,4 +383,61 @@ void CycleDetectionAlgorithm() {
 			break;
 		}
 	}
+}
+
+void InfixToPostfix()
+{
+	// Infix to postfix
+	// operator precedence ( or order of oparation)
+	// 1. paracentesis () {} []
+	// 2. exponents ( right to left )
+	// 3. multiplication and division (left to right)
+	// 4. addition and subtraction (left to right)
+
+	//std::cout << GetOperator('-') << std::endl;
+
+	//char expression[] = { '(','(','1','+','2',')','*','3','-','4',')','*','5' };
+	char expression[] = { '1','*','(','2','+','3',')' };
+	const int size = sizeof(expression);
+
+	Stack<char> postfix;
+	Stack<char> stack;
+
+	for (int i = 0; i < size; i++)
+	{
+		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
+			postfix.Push(expression[i]);
+		}
+		else if (expression[i] == '(') {
+			stack.Push(expression[i]);
+		}
+		else if (expression[i] == ')') {
+			while (stack.Top() != '(')
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Pop();
+		}
+		else {
+			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(')
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Push(expression[i]);
+		}
+	}
+	while (!stack.isEmpty())
+	{
+		postfix.Push(stack.Top());
+		stack.Pop();
+	}
+
+	postfix.Reverse();
+	postfix.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
 }
