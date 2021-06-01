@@ -25,12 +25,113 @@ public:
 template <typename T>
 class Stack : public LinkedList<T>{
 public:
-	bool isEmpty() const;
+	bool IsEmpty() const;
 	void Push(T data);
 	void Pop();
 	T Top() const;
 	void Reverse();
 };
+
+template <typename T>
+class Queue : public LinkedList<T> {
+private:
+	Node<T> *m_tailPtr;
+public:
+	void EnQueue(T data); // push
+	T DeQueue(); // pop
+	T Front(); // peek
+	bool IsEmpty();
+};
+
+template<typename T,const int Size>
+class QueueArray {
+private:
+	T m_queue[Size];
+	int m_front;
+	int m_rear;
+public:
+	QueueArray():m_front(-1),m_rear(-1){}
+	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
+	void TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
+	void EnQueue(T data); // push
+	void DeQueue(); // pop
+	T Front(); // peek
+	bool IsEmpty();
+	bool IsFull();
+};
+
+template<typename T, const int Size>
+void QueueArray<T,Size>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
+{
+	callbackStart();
+
+	int i = m_front;
+	if (m_front == -1) return;
+	do {
+		callback(m_queue[i]);
+		i = (i + 1) % Size;
+	} while (i != (m_rear + 1) % Size);
+
+	callbackEnd();
+}
+
+template<typename T, const int Size>
+void QueueArray<T, Size>::TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
+{
+	callbackStart();
+
+	for (int i = 0; i < Size; i++)
+	{
+		callback(m_queue[i]);
+	}
+
+	callbackEnd();
+}
+
+template<typename T, int Size>
+bool QueueArray<T, Size>::IsEmpty()
+{
+	if (m_front == -1 && m_rear == -1) return true;
+	else return false;
+}
+
+template<typename T, int Size>
+bool QueueArray<T, Size>::IsFull()
+{
+	if ((m_rear + 1) % Size == m_front) return true;
+	else return false;
+}
+
+template<typename T, int Size>
+void QueueArray<T, Size>::EnQueue(T data)
+{
+	if (IsFull()) return;
+	else if (IsEmpty()) {
+		m_front = 0;
+		m_rear = 0;
+	}
+	else m_rear = (m_rear + 1) % Size;
+	
+	m_queue[m_rear] = data;
+}
+
+template<typename T, int Size>
+void QueueArray<T, Size>::DeQueue()
+{
+	if (IsEmpty()) return;
+	else if (m_front == m_rear) {
+		m_front = -1;
+		m_rear = -1;
+	}
+	else m_front = (m_front + 1) % Size;
+}
+
+template<typename T, int Size>
+T QueueArray<T, Size>::Front()
+{
+	if (IsEmpty()) return T();
+	else m_queue[m_front];
+}
 
 void Test();
 
@@ -39,10 +140,10 @@ void CheckBalancedParenthesesTest();
 
 int charToInt(char c);
 int Operation(int operand_1, int operand_2, char operator_char);
-void PostfixEvaluation();
-void PrefixEvaluation();
+void PostfixEvaluationTest();
+void PrefixEvaluationTest();
 
-void CycleDetectionAlgorithm();
+void CycleDetectionAlgorithmTest();
 
 enum Operators
 {
@@ -68,19 +169,90 @@ Operators GetOperator(char c) {
 		return Operators::Undefined;
 	}
 }
-void InfixToPostfix();
+void InfixToPostfixTest();
 
 
 int main(int argc, char** args) {
 	
-	InfixToPostfix();
+	QueueArray<int, 3> queue;
 
-	//CycleDetectionAlgorithm();
-	//PrefixEvaluation();
-	//PostfixEvaluation();
-	//CheckBalancedParenthesesTest();
-	//Test();
+	std::cout << queue.IsEmpty() << std::endl;
+	std::cout << queue.IsFull() << std::endl;
 
+	
+	queue.EnQueue(11);
+	queue.EnQueue(22);
+	queue.EnQueue(33);
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.DeQueue();
+	
+	std::cout << queue.IsEmpty() << std::endl;
+	std::cout << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.EnQueue(44);
+	queue.EnQueue(55);
+
+	std::cout << queue.IsEmpty() << std::endl;
+	std::cout << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.DeQueue();
+	queue.EnQueue(55);
+
+	std::cout << queue.IsEmpty() << std::endl;
+	std::cout << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	/*
+	InfixToPostfixTest();
+	CycleDetectionAlgorithmTest();
+	PrefixEvaluationTest();
+	PostfixEvaluationTest();
+	CheckBalancedParenthesesTest();
+	Test();
+	*/
 	return 0;
 }
 
@@ -128,7 +300,7 @@ void LinkedList<T>::Traverse(T(*callback)(T data, int index)) const
 // --- Stack --- //
 
 template<typename T>
-bool Stack<T>::isEmpty() const
+bool Stack<T>::IsEmpty() const
 {
 	if (this->m_headPtr == nullptr) return true;
 	else return false;
@@ -176,7 +348,7 @@ void Stack<T>::Reverse()
 	tempPtr = stack.Top();
 	this->m_headPtr = tempPtr;
 	stack.Pop();
-	while (!stack.isEmpty())
+	while (!stack.IsEmpty())
 	{
 		tempPtr->m_nextPtr = stack.Top();
 		stack.Pop();
@@ -198,7 +370,7 @@ void Test()
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Is the list Empty : " << stack.IsEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 
 	stack.Reverse();
@@ -207,7 +379,7 @@ void Test()
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Is the list Empty : " << stack.IsEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 
 	stack.Traverse([](int data, int index) { return data + index; });
@@ -218,7 +390,7 @@ void Test()
 	);
 
 	std::cout << "Poped items : ";
-	while(!stack.isEmpty()){
+	while(!stack.IsEmpty()){
 		stack.Pop();
 	}
 	std::cout << std::endl;
@@ -227,7 +399,7 @@ void Test()
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Is the list Empty : " << stack.IsEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 
 	for (int i = 0; i < 20; i++) {
@@ -238,7 +410,7 @@ void Test()
 		[]() {std::cout << "List : "; },
 		[]() {std::cout << std::endl; }
 	);
-	std::cout << "Is the list Empty : " << stack.isEmpty() << std::endl;
+	std::cout << "Is the list Empty : " << stack.IsEmpty() << std::endl;
 	std::cout << "Top : " << stack.Top() << std::endl;
 }
 
@@ -254,7 +426,7 @@ bool CheckBalancedParentheses(const char *expression, Stack<char> &stack) {
 				stack.Push(c);
 			}
 			else {
-				if (stack.isEmpty()) {
+				if (stack.IsEmpty()) {
 					stack.Push(c);
 					break;
 				}
@@ -272,7 +444,7 @@ bool CheckBalancedParentheses(const char *expression, Stack<char> &stack) {
 		i++;
 	}
 
-	if (stack.isEmpty()) return true;
+	if (stack.IsEmpty()) return true;
 	else return false;
 }
 
@@ -284,7 +456,7 @@ void CheckBalancedParenthesesTest() {
 
 	CheckBalancedParentheses(text, stack);
 
-	if (stack.isEmpty()) {
+	if (stack.IsEmpty()) {
 		std::cout << "Balanced" << std::endl;
 	}
 	else
@@ -305,7 +477,7 @@ int Operation(int operand_1, int operand_2, char operator_char) {
 	if (operator_char == '*') return operand_1 * operand_2;
 }
 
-void PostfixEvaluation() {
+void PostfixEvaluationTest() {
 
 	char expression[] = { '2','3','*','5','4','*','+','9','-' };
 	//char expression[] = { '2','3','*','5','4','*','-'};
@@ -334,7 +506,7 @@ void PostfixEvaluation() {
 	);
 }
 
-void PrefixEvaluation()
+void PrefixEvaluationTest()
 {
 	char expression[] = { '-', '+', '*', '2','3', '*','5','4','9' };
 
@@ -365,7 +537,7 @@ void PrefixEvaluation()
 	);
 }
 
-void CycleDetectionAlgorithm() {
+void CycleDetectionAlgorithmTest() {
 	int x[] = { 1,4,3,5,6,1,2 };
 	//int x[] = { 1,4,2,3,5,6,2 };
 
@@ -385,7 +557,7 @@ void CycleDetectionAlgorithm() {
 	}
 }
 
-void InfixToPostfix()
+void InfixToPostfixTest()
 {
 	// Infix to postfix
 	// operator precedence ( or order of oparation)
@@ -420,7 +592,7 @@ void InfixToPostfix()
 			stack.Pop();
 		}
 		else {
-			while (!stack.isEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(')
+			while (!stack.IsEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(')
 			{
 				postfix.Push(stack.Top());
 				stack.Pop();
@@ -428,7 +600,7 @@ void InfixToPostfix()
 			stack.Push(expression[i]);
 		}
 	}
-	while (!stack.isEmpty())
+	while (!stack.IsEmpty())
 	{
 		postfix.Push(stack.Top());
 		stack.Pop();
