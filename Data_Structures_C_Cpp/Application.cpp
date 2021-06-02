@@ -55,83 +55,10 @@ public:
 	void TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 	void EnQueue(T data); // push
 	void DeQueue(); // pop
-	T Front(); // peek
-	bool IsEmpty();
-	bool IsFull();
+	T Front() const; // peek
+	bool IsEmpty() const;
+	bool IsFull() const;
 };
-
-template<typename T, const int Size>
-void QueueArray<T,Size>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
-{
-	callbackStart();
-
-	int i = m_front;
-	if (m_front == -1) return;
-	do {
-		callback(m_queue[i]);
-		i = (i + 1) % Size;
-	} while (i != (m_rear + 1) % Size);
-
-	callbackEnd();
-}
-
-template<typename T, const int Size>
-void QueueArray<T, Size>::TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
-{
-	callbackStart();
-
-	for (int i = 0; i < Size; i++)
-	{
-		callback(m_queue[i]);
-	}
-
-	callbackEnd();
-}
-
-template<typename T, int Size>
-bool QueueArray<T, Size>::IsEmpty()
-{
-	if (m_front == -1 && m_rear == -1) return true;
-	else return false;
-}
-
-template<typename T, int Size>
-bool QueueArray<T, Size>::IsFull()
-{
-	if ((m_rear + 1) % Size == m_front) return true;
-	else return false;
-}
-
-template<typename T, int Size>
-void QueueArray<T, Size>::EnQueue(T data)
-{
-	if (IsFull()) return;
-	else if (IsEmpty()) {
-		m_front = 0;
-		m_rear = 0;
-	}
-	else m_rear = (m_rear + 1) % Size;
-	
-	m_queue[m_rear] = data;
-}
-
-template<typename T, int Size>
-void QueueArray<T, Size>::DeQueue()
-{
-	if (IsEmpty()) return;
-	else if (m_front == m_rear) {
-		m_front = -1;
-		m_rear = -1;
-	}
-	else m_front = (m_front + 1) % Size;
-}
-
-template<typename T, int Size>
-T QueueArray<T, Size>::Front()
-{
-	if (IsEmpty()) return T();
-	else m_queue[m_front];
-}
 
 void Test();
 
@@ -142,7 +69,7 @@ int charToInt(char c);
 int Operation(int operand_1, int operand_2, char operator_char);
 void PostfixEvaluationTest();
 void PrefixEvaluationTest();
-
+void InfixToPostfixTest();
 void CycleDetectionAlgorithmTest();
 
 enum Operators
@@ -153,106 +80,19 @@ enum Operators
 	Multiplication,
 	Undefined
 };
-Operators GetOperator(char c) {
-
-	switch (c)
-	{
-	case '-':
-		return Operators::Subtraction;
-	case '+':
-		return Operators::Addition;
-	case '/':
-		return Operators::Division;
-	case '*':
-		return Operators::Multiplication;
-	default:
-		return Operators::Undefined;
-	}
-}
-void InfixToPostfixTest();
-
+Operators GetOperator(char c);
+void QueueArrayTest();
 
 int main(int argc, char** args) {
 	
-	QueueArray<int, 3> queue;
-
-	std::cout << queue.IsEmpty() << std::endl;
-	std::cout << queue.IsFull() << std::endl;
-
-	
-	queue.EnQueue(11);
-	queue.EnQueue(22);
-	queue.EnQueue(33);
-
-	queue.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Queue : "; },
-		[]() {std::cout << std::endl; }
-	);
-	queue.TraverseArray(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Array : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-	queue.DeQueue();
-	
-	std::cout << queue.IsEmpty() << std::endl;
-	std::cout << queue.IsFull() << std::endl;
-
-	queue.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Queue : "; },
-		[]() {std::cout << std::endl; }
-	);
-	queue.TraverseArray(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Array : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-	queue.EnQueue(44);
-	queue.EnQueue(55);
-
-	std::cout << queue.IsEmpty() << std::endl;
-	std::cout << queue.IsFull() << std::endl;
-
-	queue.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Queue : "; },
-		[]() {std::cout << std::endl; }
-	);
-	queue.TraverseArray(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Array : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-	queue.DeQueue();
-	queue.EnQueue(55);
-
-	std::cout << queue.IsEmpty() << std::endl;
-	std::cout << queue.IsFull() << std::endl;
-
-	queue.Traverse(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Queue : "; },
-		[]() {std::cout << std::endl; }
-	);
-	queue.TraverseArray(
-		[](int data) {std::cout << data << " "; },
-		[]() {std::cout << "Array : "; },
-		[]() {std::cout << std::endl; }
-	);
-
-	/*
+	QueueArrayTest();
 	InfixToPostfixTest();
 	CycleDetectionAlgorithmTest();
 	PrefixEvaluationTest();
 	PostfixEvaluationTest();
 	CheckBalancedParenthesesTest();
 	Test();
-	*/
+	
 	return 0;
 }
 
@@ -357,6 +197,80 @@ void Stack<T>::Reverse()
 	tempPtr->m_nextPtr = nullptr;
 }
 
+// --- Queue Array --- //
+
+template<typename T, const int Size>
+void QueueArray<T, Size>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
+{
+	callbackStart();
+
+	int i = m_front;
+	if (m_front == -1) return;
+	do {
+		callback(m_queue[i]);
+		i = (i + 1) % Size;
+	} while (i != (m_rear + 1) % Size);
+
+	callbackEnd();
+}
+
+template<typename T, const int Size>
+void QueueArray<T, Size>::TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
+{
+	callbackStart();
+
+	for (int i = 0; i < Size; i++)
+	{
+		callback(m_queue[i]);
+	}
+
+	callbackEnd();
+}
+
+template<typename T, int Size>
+bool QueueArray<T, Size>::IsEmpty() const
+{
+	if (m_front == -1 && m_rear == -1) return true;
+	else return false;
+}
+
+template<typename T, int Size>
+bool QueueArray<T, Size>::IsFull() const
+{
+	if ((m_rear + 1) % Size == m_front) return true;
+	else return false;
+}
+
+template<typename T, int Size>
+void QueueArray<T, Size>::EnQueue(T data)
+{
+	if (IsFull()) return;
+	else if (IsEmpty()) {
+		m_front = 0;
+		m_rear = 0;
+	}
+	else m_rear = (m_rear + 1) % Size;
+
+	m_queue[m_rear] = data;
+}
+
+template<typename T, int Size>
+void QueueArray<T, Size>::DeQueue()
+{
+	if (IsEmpty()) return;
+	else if (m_front == m_rear) {
+		m_front = -1;
+		m_rear = -1;
+	}
+	else m_front = (m_front + 1) % Size;
+}
+
+template<typename T, int Size>
+T QueueArray<T, Size>::Front() const
+{
+	if (IsEmpty()) return T();
+	else m_queue[m_front];
+}
 
 
 void Test()
@@ -555,6 +469,97 @@ void CycleDetectionAlgorithmTest() {
 			break;
 		}
 	}
+}
+
+Operators GetOperator(char c)
+{
+	switch (c)
+	{
+	case '-':
+		return Operators::Subtraction;
+	case '+':
+		return Operators::Addition;
+	case '/':
+		return Operators::Division;
+	case '*':
+		return Operators::Multiplication;
+	default:
+		return Operators::Undefined;
+	}
+}
+
+void QueueArrayTest()
+{
+	QueueArray<int, 3> queue;
+
+	std::cout << "Is Empty : "<<queue.IsEmpty() << std::endl;
+	std::cout << "Is Full : "<<queue.IsFull() << std::endl;
+
+
+	queue.EnQueue(11);
+	queue.EnQueue(22);
+	queue.EnQueue(33);
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.DeQueue();
+
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Is Full : " << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.EnQueue(44);
+	queue.EnQueue(55);
+
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Is Full : " << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
+
+	queue.DeQueue();
+	queue.EnQueue(55);
+
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Is Full : " << queue.IsFull() << std::endl;
+
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl; }
+	);
+	queue.TraverseArray(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Array : "; },
+		[]() {std::cout << std::endl; }
+	);
 }
 
 void InfixToPostfixTest()
