@@ -38,9 +38,9 @@ private:
 	Node<T> *m_tailPtr;
 public:
 	void EnQueue(T data); // push
-	T DeQueue(); // pop
-	T Front(); // peek
-	bool IsEmpty();
+	void DeQueue(); // pop
+	T Front() const; // peek
+	bool IsEmpty() const;
 };
 
 template<typename T,const int Size>
@@ -83,8 +83,13 @@ enum Operators
 Operators GetOperator(char c);
 void QueueArrayTest();
 
+void QueueLinkedListTest();
+
 int main(int argc, char** args) {
 	
+	QueueLinkedListTest();
+
+	/*
 	QueueArrayTest();
 	InfixToPostfixTest();
 	CycleDetectionAlgorithmTest();
@@ -92,7 +97,7 @@ int main(int argc, char** args) {
 	PostfixEvaluationTest();
 	CheckBalancedParenthesesTest();
 	Test();
-	
+	*/
 	return 0;
 }
 
@@ -195,6 +200,54 @@ void Stack<T>::Reverse()
 		tempPtr = tempPtr->m_nextPtr;
 	}
 	tempPtr->m_nextPtr = nullptr;
+}
+
+// --- Queue --- //
+
+template<typename T>
+void Queue<T>::EnQueue(T data)
+{
+	Node<T>* newNode = this->GetANewNode(data);
+
+	if (this->m_headPtr == nullptr) {
+		this->m_headPtr = newNode;
+		this->m_tailPtr = newNode;
+	}
+	else {
+		this->m_tailPtr->m_nextPtr = newNode;
+		this->m_tailPtr = newNode;
+	}
+}
+
+template<typename T>
+void Queue<T>::DeQueue()
+{
+	if (this->m_headPtr == nullptr) return;
+
+	if (this->m_headPtr == this->m_tailPtr) {
+		delete this->m_headPtr;
+		this->m_headPtr = nullptr;
+		this->m_tailPtr = nullptr;
+	}
+	else {
+		Node<T>* deleteNodePtr = this->m_headPtr;
+		this->m_headPtr = this->m_headPtr->m_nextPtr;
+		delete deleteNodePtr;
+	}
+}
+
+template<typename T>
+T Queue<T>::Front() const
+{
+	if(this->m_headPtr == nullptr) return T();
+	else return this->m_headPtr->m_data;
+}
+
+template<typename T>
+bool Queue<T>::IsEmpty() const
+{
+	if (this->m_headPtr == nullptr) return true;
+	else return false;
 }
 
 // --- Queue Array --- //
@@ -451,6 +504,63 @@ void PrefixEvaluationTest()
 	);
 }
 
+void InfixToPostfixTest()
+{
+	// Infix to postfix
+	// operator precedence ( or order of oparation)
+	// 1. paracentesis () {} []
+	// 2. exponents ( right to left )
+	// 3. multiplication and division (left to right)
+	// 4. addition and subtraction (left to right)
+
+	//std::cout << GetOperator('-') << std::endl;
+
+	//char expression[] = { '(','(','1','+','2',')','*','3','-','4',')','*','5' };
+	char expression[] = { '1','*','(','2','+','3',')' };
+	const int size = sizeof(expression);
+
+	Stack<char> postfix;
+	Stack<char> stack;
+
+	for (int i = 0; i < size; i++)
+	{
+		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
+			postfix.Push(expression[i]);
+		}
+		else if (expression[i] == '(') {
+			stack.Push(expression[i]);
+		}
+		else if (expression[i] == ')') {
+			while (stack.Top() != '(')
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Pop();
+		}
+		else {
+			while (!stack.IsEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(')
+			{
+				postfix.Push(stack.Top());
+				stack.Pop();
+			}
+			stack.Push(expression[i]);
+		}
+	}
+	while (!stack.IsEmpty())
+	{
+		postfix.Push(stack.Top());
+		stack.Pop();
+	}
+
+	postfix.Reverse();
+	postfix.Traverse(
+		[](char data) {std::cout << data << " "; },
+		[]() {std::cout << "List : "; },
+		[]() {std::cout << std::endl; }
+	);
+}
+
 void CycleDetectionAlgorithmTest() {
 	int x[] = { 1,4,3,5,6,1,2 };
 	//int x[] = { 1,4,2,3,5,6,2 };
@@ -562,59 +672,62 @@ void QueueArrayTest()
 	);
 }
 
-void InfixToPostfixTest()
+void QueueLinkedListTest()
 {
-	// Infix to postfix
-	// operator precedence ( or order of oparation)
-	// 1. paracentesis () {} []
-	// 2. exponents ( right to left )
-	// 3. multiplication and division (left to right)
-	// 4. addition and subtraction (left to right)
+	Queue<int> queue;
 
-	//std::cout << GetOperator('-') << std::endl;
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Front : " << queue.Front() << std::endl;
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl << std::endl; }
+	);
 
-	//char expression[] = { '(','(','1','+','2',')','*','3','-','4',')','*','5' };
-	char expression[] = { '1','*','(','2','+','3',')' };
-	const int size = sizeof(expression);
+	queue.EnQueue(10);
+	queue.EnQueue(20);
+	queue.EnQueue(30);
+	queue.EnQueue(40);
 
-	Stack<char> postfix;
-	Stack<char> stack;
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Front : " << queue.Front() << std::endl;
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl << std::endl; }
+	);
 
-	for (int i = 0; i < size; i++)
-	{
-		if ((int)expression[i] > 48 && (int)expression[i] < 58) {
-			postfix.Push(expression[i]);
-		}
-		else if (expression[i] == '(') {
-			stack.Push(expression[i]);
-		}
-		else if (expression[i] == ')') {
-			while (stack.Top() != '(')
-			{
-				postfix.Push(stack.Top());
-				stack.Pop();
-			}
-			stack.Pop();
-		}
-		else {
-			while (!stack.IsEmpty() && (GetOperator(stack.Top()) > GetOperator(expression[i])) && stack.Top() != '(')
-			{
-				postfix.Push(stack.Top());
-				stack.Pop();
-			}
-			stack.Push(expression[i]);
-		}
-	}
-	while (!stack.IsEmpty())
-	{
-		postfix.Push(stack.Top());
-		stack.Pop();
-	}
+	queue.DeQueue();
+	queue.DeQueue();
 
-	postfix.Reverse();
-	postfix.Traverse(
-		[](char data) {std::cout << data << " "; },
-		[]() {std::cout << "List : "; },
-		[]() {std::cout << std::endl; }
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Front : " << queue.Front() << std::endl;
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl << std::endl; }
+	);
+
+	queue.DeQueue();
+	queue.DeQueue();
+	queue.EnQueue(11);
+
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Front : " << queue.Front() << std::endl;
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl << std::endl; }
+	);
+
+	queue.DeQueue();
+	queue.DeQueue();
+
+	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
+	std::cout << "Front : " << queue.Front() << std::endl;
+	queue.Traverse(
+		[](int data) {std::cout << data << " "; },
+		[]() {std::cout << "Queue : "; },
+		[]() {std::cout << std::endl << std::endl; }
 	);
 }
