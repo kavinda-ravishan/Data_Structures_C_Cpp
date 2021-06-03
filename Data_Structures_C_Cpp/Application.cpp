@@ -1,9 +1,9 @@
 #include <iostream>
-/*
+
 #include "SinglyLinkedList.h"
 #include "DoublyLinkedList.h"
 #include "LinkedList.h"
-*/
+
 
 template <typename T>
 struct BinTreeNode
@@ -23,6 +23,10 @@ int main(int argc, char** args) {
 	std::cout << "Data : " << node->m_data << std::endl;
 	std::cout << "Left : " << node->m_leftPtr << std::endl;
 	std::cout << "Right : " << node->m_rightPtr << std::endl;
+
+	SinglyLinkedListTest::TestAll();
+	DoublyLinkedListTest::TestAll();
+	StackQueuTest::TestAll();
 
 	return 0;
 }

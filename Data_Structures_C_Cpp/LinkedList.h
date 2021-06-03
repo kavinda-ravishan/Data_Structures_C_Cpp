@@ -16,6 +16,7 @@ protected:
 	Node<T>* GetANewNode(T data) const;
 public:
 	LinkedList();
+	virtual ~LinkedList();
 	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 	void Traverse(T(*callback)(T data, int index)) const;
 };
@@ -67,7 +68,7 @@ enum Operators
 	Undefined
 };
 
-static class StackQueuTest {
+class StackQueuTest {
 public:
 	static void StackTest();
 	static bool CheckBalancedParentheses(const char *expression, Stack<char> &stack);

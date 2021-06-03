@@ -7,6 +7,9 @@ template<typename T>
 LinkedList<T>::LinkedList() :m_headPtr(nullptr) {}
 
 template<typename T>
+LinkedList<T>::~LinkedList() {}
+
+template<typename T>
 Node<T>* LinkedList<T>::GetANewNode(T data) const
 {
 	return new Node<T>(data);
@@ -343,6 +346,7 @@ int StackQueuTest::Operation(int operand_1, int operand_2, char operator_char) {
 	if (operator_char == '+') return operand_1 + operand_2;
 	if (operator_char == '-') return operand_1 - operand_2;
 	if (operator_char == '*') return operand_1 * operand_2;
+	else return 0;
 }
 
 void StackQueuTest::PostfixEvaluationTest() {

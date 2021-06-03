@@ -23,7 +23,7 @@ public:
 	int GetMiddleElement();
 };
 
-static class SinglyLinkedListTest {
+class SinglyLinkedListTest {
 public:
 	static void PrintList(SinglyLinkedList list);
 	static void InsertToHeadTest();

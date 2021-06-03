@@ -24,7 +24,7 @@ public:
 	void InsertAtTail(T data);
 };
 
-static class DoublyLinkedListTest {
+class DoublyLinkedListTest {
 public:
 	template <typename T>
 	static void PrintListHeadToTail(DoublyLinkedList<T> list);
