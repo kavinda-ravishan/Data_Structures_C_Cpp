@@ -6,32 +6,77 @@
 
 
 template <typename T>
-struct BinTreeNode
+struct BinaryTreeNode
 {
 	T m_data;
-	BinTreeNode<T>* m_leftPtr;
-	BinTreeNode<T>* m_rightPtr;
+	BinaryTreeNode<T>* m_leftPtr;
+	BinaryTreeNode<T>* m_rightPtr;
 
-	BinTreeNode(T data);
+	BinaryTreeNode(T data);
 };
 
+template <typename T>
+class BinarySearchTree {
+private:
+	BinaryTreeNode<T>* m_rootPrt;
+	BinaryTreeNode<T>* GetANewNode(T data) const;
+public:
+	BinarySearchTree();
+
+	void Insert(T data);
+};
 
 int main(int argc, char** args) {
 	
-	BinTreeNode<int>* node = new BinTreeNode<int>(10);
-
-	std::cout << "Data : " << node->m_data << std::endl;
-	std::cout << "Left : " << node->m_leftPtr << std::endl;
-	std::cout << "Right : " << node->m_rightPtr << std::endl;
-
-	SinglyLinkedListTest::TestAll();
-	DoublyLinkedListTest::TestAll();
-	StackQueuTest::TestAll();
+	BinarySearchTree<int> tree;
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(20);
+	tree.Insert(25);
 
 	return 0;
 }
 
-// --- Node --- //
+// --- BinaryTreeNode --- //
 
 template<typename T>
-BinTreeNode<T>::BinTreeNode(T data) :m_leftPtr(nullptr), m_rightPtr(nullptr), m_data(data) {}
+BinaryTreeNode<T>::BinaryTreeNode(T data) :m_leftPtr(nullptr), m_rightPtr(nullptr), m_data(data) {}
+
+// --- BinarySearchTree --- //
+
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::GetANewNode(T data) const
+{
+	return new BinaryTreeNode<T>(data);
+}
+
+template<typename T>
+BinarySearchTree<T>::BinarySearchTree():m_rootPrt(nullptr){}
+
+template<typename T>
+void BinarySearchTree<T>::Insert(T data)
+{
+	if (m_rootPrt == nullptr) {
+		m_rootPrt = GetANewNode(data);
+		return;
+	}
+
+	BinaryTreeNode<T>* tempPtr = m_rootPrt;
+	while (true)
+	{
+		if (data <= tempPtr->m_data) {
+			if (tempPtr->m_leftPtr == nullptr) {
+				tempPtr->m_leftPtr = GetANewNode(data);
+				return;
+			}
+			tempPtr = tempPtr->m_leftPtr;
+		}
+		else{
+			if (tempPtr->m_rightPtr == nullptr) {
+				tempPtr->m_rightPtr = GetANewNode(data);
+				return;
+			}
+			tempPtr = tempPtr->m_rightPtr;
+		}
+	}
+}
