@@ -20,19 +20,21 @@ class BinarySearchTree {
 private:
 	BinaryTreeNode<T>* m_rootPrt;
 	BinaryTreeNode<T>* GetANewNode(T data) const;
+	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
 public:
 	BinarySearchTree();
 
 	void Insert(T data);
+	void InsertRec(T data);
 };
 
 int main(int argc, char** args) {
 	
 	BinarySearchTree<int> tree;
-	tree.Insert(15);
-	tree.Insert(10);
-	tree.Insert(20);
-	tree.Insert(25);
+	tree.InsertRec(15);
+	tree.InsertRec(10);
+	tree.InsertRec(20);
+	tree.InsertRec(25);
 
 	return 0;
 }
@@ -79,4 +81,25 @@ void BinarySearchTree<T>::Insert(T data)
 			tempPtr = tempPtr->m_rightPtr;
 		}
 	}
+}
+
+template<typename T>
+void BinarySearchTree<T>::InsertRec(T data)
+{
+	m_rootPrt = Insert(data, m_rootPrt);
+}
+
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::Insert(T data, BinaryTreeNode<T>* rootPtr)
+{
+	if (rootPtr == nullptr) {
+		rootPtr = GetANewNode(data);
+	}
+	else if (data <= rootPtr->m_data) {
+		rootPtr->m_leftPtr = Insert(data, rootPtr->m_leftPtr);
+	}
+	else{
+		rootPtr->m_rightPtr = Insert(data, rootPtr->m_rightPtr);
+	}
+	return rootPtr;
 }
