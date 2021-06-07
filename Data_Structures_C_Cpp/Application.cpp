@@ -43,21 +43,23 @@ int main(int argc, char** args) {
 	tree.Insert(21);
 	tree.Insert(26);
 
-	std::cout << "Search for Number {" << 15 << "} : " << tree.SearchRec(15) << std::endl;
-	std::cout << "Search for Number {" << 26 << "} : " << tree.SearchRec(26) << std::endl;
-	std::cout << "Search for Number {" << 16 << "} : " << tree.SearchRec(16) << std::endl;
+	int number = 0;
 
-	std::cout << "Search for Number {" << 17 << "} : " << tree.SearchRec(17) << std::endl;
-	std::cout << "Search for Number {" << 27 << "} : " << tree.SearchRec(27) << std::endl;
-	std::cout << "Search for Number {" << 18 << "} : " << tree.SearchRec(18) << std::endl;
+	number = 15; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
 
-	std::cout << "Search for Number {" << 15 << "} : " << tree.Search(15) << std::endl;
-	std::cout << "Search for Number {" << 26 << "} : " << tree.Search(26) << std::endl;
-	std::cout << "Search for Number {" << 16 << "} : " << tree.Search(16) << std::endl;
+	number = 17; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	
+	number = 15; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
 
-	std::cout << "Search for Number {" << 17 << "} : " << tree.Search(17) << std::endl;
-	std::cout << "Search for Number {" << 27 << "} : " << tree.Search(27) << std::endl;
-	std::cout << "Search for Number {" << 18 << "} : " << tree.Search(18) << std::endl;
+	number = 17; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
 
 	return 0;
 }
