@@ -1,9 +1,9 @@
 #include <iostream>
-
+/*
 #include "SinglyLinkedList.h"
 #include "DoublyLinkedList.h"
 #include "LinkedList.h"
-
+*/
 
 template <typename T>
 struct BinaryTreeNode
@@ -28,6 +28,7 @@ public:
 	void Insert(T data);
 	void InsertRec(T data);
 	bool SearchRec(T data) const;
+	bool Search(T data) const;
 };
 
 int main(int argc, char** args) {
@@ -49,6 +50,14 @@ int main(int argc, char** args) {
 	std::cout << "Search for Number {" << 17 << "} : " << tree.SearchRec(17) << std::endl;
 	std::cout << "Search for Number {" << 27 << "} : " << tree.SearchRec(27) << std::endl;
 	std::cout << "Search for Number {" << 18 << "} : " << tree.SearchRec(18) << std::endl;
+
+	std::cout << "Search for Number {" << 15 << "} : " << tree.Search(15) << std::endl;
+	std::cout << "Search for Number {" << 26 << "} : " << tree.Search(26) << std::endl;
+	std::cout << "Search for Number {" << 16 << "} : " << tree.Search(16) << std::endl;
+
+	std::cout << "Search for Number {" << 17 << "} : " << tree.Search(17) << std::endl;
+	std::cout << "Search for Number {" << 27 << "} : " << tree.Search(27) << std::endl;
+	std::cout << "Search for Number {" << 18 << "} : " << tree.Search(18) << std::endl;
 
 	return 0;
 }
@@ -131,5 +140,19 @@ template<typename T>
 bool BinarySearchTree<T>::SearchRec(T data) const
 {
 	return Search(data, m_rootPrt);
+}
+
+template<typename T>
+bool BinarySearchTree<T>::Search(T data) const
+{
+	BinaryTreeNode<T>* tempPtr = m_rootPrt;
+
+	while (true)
+	{
+		if (tempPtr == nullptr) return false;
+		else if (data == tempPtr->m_data) return true;
+		else if (data <= tempPtr->m_data) tempPtr = tempPtr->m_leftPtr;
+		else tempPtr = tempPtr->m_rightPtr;
+	}
 }
 
