@@ -27,8 +27,10 @@ public:
 
 	void Insert(T data);
 	void InsertRec(T data);
-	bool SearchRec(T data) const;
 	bool Search(T data) const;
+	bool SearchRec(T data) const;
+	T GetMin() const;
+	T GetMax() const;
 };
 
 int main(int argc, char** args) {
@@ -45,21 +47,24 @@ int main(int argc, char** args) {
 
 	int number = 0;
 
-	number = 15; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 26; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 16; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+							   						  
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+							   						 
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+							   						 
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
 
-	number = 17; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 27; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 18; std::cout << "Search for Number {" << number << "} : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	
-	number = 15; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 26; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 16; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-
-	number = 17; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 27; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 18; std::cout << "Search for Number {" << number << "} : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	std::cout << "Min : " << tree.GetMin() << std::endl;
+	std::cout << "Max : " << tree.GetMax() << std::endl;
 
 	return 0;
 }
@@ -139,12 +144,6 @@ void BinarySearchTree<T>::InsertRec(T data)
 }
 
 template<typename T>
-bool BinarySearchTree<T>::SearchRec(T data) const
-{
-	return Search(data, m_rootPrt);
-}
-
-template<typename T>
 bool BinarySearchTree<T>::Search(T data) const
 {
 	BinaryTreeNode<T>* tempPtr = m_rootPrt;
@@ -157,4 +156,41 @@ bool BinarySearchTree<T>::Search(T data) const
 		else tempPtr = tempPtr->m_rightPtr;
 	}
 }
+
+template<typename T>
+bool BinarySearchTree<T>::SearchRec(T data) const
+{
+	return Search(data, m_rootPrt);
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMin() const
+{
+	if(m_rootPrt == nullptr) return T();
+
+	BinaryTreeNode<T>* tempPtr = m_rootPrt;
+
+	while (true)
+	{
+		if (tempPtr->m_leftPtr == nullptr) return tempPtr->m_data;
+		else tempPtr = tempPtr->m_leftPtr;
+	}
+
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMax() const
+{
+	if (m_rootPrt == nullptr) return T();
+
+	BinaryTreeNode<T>* tempPtr = m_rootPrt;
+
+	while (true)
+	{
+		if (tempPtr->m_rightPtr == nullptr) return tempPtr->m_data;
+		else tempPtr = tempPtr->m_rightPtr;
+	}
+}
+
+
 
