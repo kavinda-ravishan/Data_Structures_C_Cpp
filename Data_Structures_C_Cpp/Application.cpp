@@ -19,9 +19,12 @@ template <typename T>
 class BinarySearchTree {
 private:
 	BinaryTreeNode<T>* m_rootPrt;
+
 	BinaryTreeNode<T>* GetANewNode(T data) const;
 	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
 	bool Search(T data, BinaryTreeNode<T>* rootPtr) const;
+	T GetMin(BinaryTreeNode<T>* rootPtr) const;
+	T GetMax(BinaryTreeNode<T>* rootPtr) const;
 public:
 	BinarySearchTree();
 
@@ -30,12 +33,21 @@ public:
 	bool Search(T data) const;
 	bool SearchRec(T data) const;
 	T GetMin() const;
+	T GetMinRec() const;
 	T GetMax() const;
+	T GetMaxRec() const;
 };
 
 int main(int argc, char** args) {
 	
 	BinarySearchTree<int> tree;
+
+	std::cout << "Min : " << tree.GetMin() << std::endl;
+	std::cout << "Max : " << tree.GetMax() << std::endl;
+
+	std::cout << "Min : " << tree.GetMinRec() << std::endl;
+	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
+
 	tree.InsertRec(15);
 	tree.InsertRec(10);
 	tree.InsertRec(20);
@@ -65,6 +77,9 @@ int main(int argc, char** args) {
 
 	std::cout << "Min : " << tree.GetMin() << std::endl;
 	std::cout << "Max : " << tree.GetMax() << std::endl;
+
+	std::cout << "Min : " << tree.GetMinRec() << std::endl;
+	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
 
 	return 0;
 }
@@ -104,6 +119,25 @@ bool BinarySearchTree<T>::Search(T data, BinaryTreeNode<T>* rootPtr) const
 	else if (rootPtr->m_data == data) return true;
 	else if (data <= rootPtr->m_data) return Search(data, rootPtr->m_leftPtr);
 	else return Search(data, rootPtr->m_rightPtr);
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMin(BinaryTreeNode<T>* rootPtr) const
+{
+	if (rootPtr == nullptr) return T();
+	
+	if (rootPtr->m_leftPtr == nullptr) return rootPtr->m_data;
+	else return GetMin(rootPtr->m_leftPtr);
+
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMax(BinaryTreeNode<T>* rootPtr) const
+{
+	if (rootPtr == nullptr) return T();
+
+	if (rootPtr->m_rightPtr == nullptr) return rootPtr->m_data;
+	else return GetMax(rootPtr->m_rightPtr);
 }
 
 template<typename T>
@@ -148,13 +182,13 @@ bool BinarySearchTree<T>::Search(T data) const
 {
 	BinaryTreeNode<T>* tempPtr = m_rootPrt;
 
-	while (true)
+	while (tempPtr != nullptr)
 	{
-		if (tempPtr == nullptr) return false;
-		else if (data == tempPtr->m_data) return true;
+		if (data == tempPtr->m_data) return true;
 		else if (data <= tempPtr->m_data) tempPtr = tempPtr->m_leftPtr;
 		else tempPtr = tempPtr->m_rightPtr;
 	}
+	return false;
 }
 
 template<typename T>
@@ -170,12 +204,18 @@ T BinarySearchTree<T>::GetMin() const
 
 	BinaryTreeNode<T>* tempPtr = m_rootPrt;
 
-	while (true)
+	while (tempPtr->m_leftPtr != nullptr)
 	{
-		if (tempPtr->m_leftPtr == nullptr) return tempPtr->m_data;
-		else tempPtr = tempPtr->m_leftPtr;
+		tempPtr = tempPtr->m_leftPtr;
 	}
 
+	return tempPtr->m_data;
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMinRec() const
+{
+	return GetMin(m_rootPrt);
 }
 
 template<typename T>
@@ -185,11 +225,18 @@ T BinarySearchTree<T>::GetMax() const
 
 	BinaryTreeNode<T>* tempPtr = m_rootPrt;
 
-	while (true)
+	while (tempPtr->m_rightPtr != nullptr)
 	{
-		if (tempPtr->m_rightPtr == nullptr) return tempPtr->m_data;
-		else tempPtr = tempPtr->m_rightPtr;
+		tempPtr = tempPtr->m_rightPtr;
 	}
+
+	return tempPtr->m_data;
+}
+
+template<typename T>
+T BinarySearchTree<T>::GetMaxRec() const
+{
+	return GetMax(m_rootPrt);
 }
 
 
