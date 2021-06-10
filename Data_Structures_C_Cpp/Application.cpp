@@ -15,6 +15,13 @@ struct BinaryTreeNode
 	BinaryTreeNode(T data);
 };
 
+enum Order
+{
+	Postorder = 0,
+	Preorder,
+	Inorder
+};
+
 template <typename T>
 class BinarySearchTree {
 private:
@@ -25,9 +32,11 @@ private:
 	bool Search(T data, BinaryTreeNode<T>* rootPtr) const;
 	T GetMin(BinaryTreeNode<T>* rootPtr) const;
 	T GetMax(BinaryTreeNode<T>* rootPtr) const;
+	void TraversePostorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
+	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
+	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 public:
 	BinarySearchTree();
-
 	void Insert(T data);
 	void InsertRec(T data);
 	bool Search(T data) const;
@@ -36,51 +45,18 @@ public:
 	T GetMinRec() const;
 	T GetMax() const;
 	T GetMaxRec() const;
+	void TraverseRec(Order order, void(*callBack)(T data)) const;
 };
+
+void Insert_Search_Max_Min_Test();
+
+void Print_Postorder_Preorder_Inorder_Test();
 
 int main(int argc, char** args) {
 	
-	BinarySearchTree<int> tree;
-
-	std::cout << "Min : " << tree.GetMin() << std::endl;
-	std::cout << "Max : " << tree.GetMax() << std::endl;
-
-	std::cout << "Min : " << tree.GetMinRec() << std::endl;
-	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
-
-	tree.InsertRec(15);
-	tree.InsertRec(10);
-	tree.InsertRec(20);
-	tree.InsertRec(25);
-	tree.Insert(16);
-	tree.Insert(11);
-	tree.Insert(21);
-	tree.Insert(26);
-
-	int number = 0;
-
-	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-							   						  
-	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
-							   						 
-	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-							   						 
-	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
-
-	std::cout << "Min : " << tree.GetMin() << std::endl;
-	std::cout << "Max : " << tree.GetMax() << std::endl;
-
-	std::cout << "Min : " << tree.GetMinRec() << std::endl;
-	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
-
+	Insert_Search_Max_Min_Test();
+	Print_Postorder_Preorder_Inorder_Test();
+	
 	return 0;
 }
 
@@ -138,6 +114,36 @@ T BinarySearchTree<T>::GetMax(BinaryTreeNode<T>* rootPtr) const
 
 	if (rootPtr->m_rightPtr == nullptr) return rootPtr->m_data;
 	else return GetMax(rootPtr->m_rightPtr);
+}
+
+template<typename T>
+void BinarySearchTree<T>::TraversePostorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const
+{
+	if (rootPrt == nullptr) return;
+
+	TraversePostorder(rootPrt->m_leftPtr, callBack);
+	TraversePostorder(rootPrt->m_rightPtr, callBack);
+	callBack(rootPrt->m_data);
+}
+
+template<typename T>
+void BinarySearchTree<T>::TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const
+{
+	if (rootPrt == nullptr) return;
+
+	callBack(rootPrt->m_data);
+	TraversePreorder(rootPrt->m_leftPtr, callBack);
+	TraversePreorder(rootPrt->m_rightPtr, callBack);
+}
+
+template<typename T>
+void BinarySearchTree<T>::TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const
+{
+	if (rootPrt == nullptr) return;
+
+	TraverseInorder(rootPrt->m_leftPtr, callBack);
+	callBack(rootPrt->m_data);
+	TraverseInorder(rootPrt->m_rightPtr, callBack);
 }
 
 template<typename T>
@@ -239,5 +245,123 @@ T BinarySearchTree<T>::GetMaxRec() const
 	return GetMax(m_rootPrt);
 }
 
+template<typename T>
+void BinarySearchTree<T>::TraverseRec(Order order, void(*callBack)(T data)) const
+{
+	switch (order)
+	{
+	case Order::Postorder:
+		TraversePostorder(m_rootPrt, callBack);
+		break;
+	case Order::Preorder:
+		TraversePreorder(m_rootPrt, callBack);
+		break;
+	case Order::Inorder:
+		TraverseInorder(m_rootPrt, callBack);
+		break;
+	default:
+		break;
+	}
+}
 
+void Insert_Search_Max_Min_Test()
+{
+	BinarySearchTree<int> tree;
 
+	int number = 0;
+
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+
+	std::cout << "Min : " << tree.GetMin() << std::endl;
+	std::cout << "Max : " << tree.GetMax() << std::endl;
+
+	std::cout << "Min : " << tree.GetMinRec() << std::endl;
+	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
+
+	tree.InsertRec(15);
+	tree.InsertRec(10);
+	tree.InsertRec(20);
+	tree.InsertRec(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.SearchRec(number) ? "Yes" : "No") << std::endl;
+
+	number = 15; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 26; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 16; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+
+	number = 17; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 27; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+	number = 18; std::cout << "Is {" << number << "} exist : " << (tree.Search(number) ? "Yes" : "No") << std::endl;
+
+	std::cout << "Min : " << tree.GetMin() << std::endl;
+	std::cout << "Max : " << tree.GetMax() << std::endl;
+
+	std::cout << "Min : " << tree.GetMinRec() << std::endl;
+	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
+}
+
+void Print_Postorder_Preorder_Inorder_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+
+	/*
+			15
+		  __|__
+		 |     |
+		10    20
+	   _|_    _|_
+	  |   |  |   |
+	  4  11  16 25
+	 _|         _|_
+	|          |   |
+	3          21 26
+
+	*/
+
+	std::cout << "Postorder : ";
+	tree.TraverseRec(Order::Postorder, [](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Preorder : ";
+	tree.TraverseRec(Order::Preorder, [](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Inorder : ";
+	tree.TraverseRec(Order::Inorder, [](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+}
