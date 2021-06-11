@@ -1,4 +1,6 @@
+#include <stack>
 #include <iostream>
+
 /*
 #include "SinglyLinkedList.h"
 #include "DoublyLinkedList.h"
@@ -25,7 +27,7 @@ enum Order
 template <typename T>
 class BinarySearchTree {
 private:
-	BinaryTreeNode<T>* m_rootPrt;
+	//BinaryTreeNode<T>* m_rootPrt;
 
 	BinaryTreeNode<T>* GetANewNode(T data) const;
 	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
@@ -36,6 +38,8 @@ private:
 	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 public:
+	BinaryTreeNode<T>* m_rootPrt;
+
 	BinarySearchTree();
 	void Insert(T data);
 	void InsertRec(T data);
@@ -46,6 +50,7 @@ public:
 	T GetMax() const;
 	T GetMaxRec() const;
 	void TraverseRec(Order order, void(*callBack)(T data)) const;
+	void TraverseInorder(void(*callBack)(T data)) const;
 };
 
 void Insert_Search_Max_Min_Test();
@@ -54,7 +59,7 @@ void Print_Postorder_Preorder_Inorder_Test();
 
 int main(int argc, char** args) {
 	
-	Insert_Search_Max_Min_Test();
+	//Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Test();
 	
 	return 0;
@@ -264,6 +269,39 @@ void BinarySearchTree<T>::TraverseRec(Order order, void(*callBack)(T data)) cons
 	}
 }
 
+template<typename T>
+void BinarySearchTree<T>::TraverseInorder(void(*callBack)(T data)) const
+{
+	BinaryTreeNode<T>* curr = m_rootPrt;
+
+	std::stack<BinaryTreeNode<T>*> s;
+
+	while (curr != nullptr || s.empty() == false)
+	{
+		// Reach the left most Node of the curr Node
+		while (curr != nullptr)
+		{
+			/* place pointer to a tree node on
+			   the stack before traversing
+			   the node's left subtree */
+			s.push(curr);
+			curr = curr->m_leftPtr;
+		}
+
+		// Current must be NULL at this point
+		curr = s.top();
+		s.pop();
+
+		callBack(curr->m_data);
+
+		/* we have visited the node and its
+		   left subtree.  Now, it's right
+		   subtree's turn */
+		curr = curr->m_rightPtr;
+
+	}
+}
+
 void Insert_Search_Max_Min_Test()
 {
 	BinarySearchTree<int> tree;
@@ -353,15 +391,19 @@ void Print_Postorder_Preorder_Inorder_Test()
 
 	*/
 
-	std::cout << "Postorder : ";
+	std::cout << "Postorder Rec : ";
 	tree.TraverseRec(Order::Postorder, [](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	std::cout << "Preorder : ";
+	std::cout << "Preorder Rec : ";
 	tree.TraverseRec(Order::Preorder, [](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	std::cout << "Inorder : ";
+	std::cout << "Inorder Rec : ";
 	tree.TraverseRec(Order::Inorder, [](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Inorder     : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 }

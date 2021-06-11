@@ -7,7 +7,7 @@ template<typename T>
 LinkedList<T>::LinkedList() :m_headPtr(nullptr) {}
 
 template<typename T>
-LinkedList<T>::~LinkedList() {}
+LinkedList<T>::~LinkedList(){}
 
 template<typename T>
 Node<T>* LinkedList<T>::GetANewNode(T data) const
