@@ -27,7 +27,7 @@ enum Order
 template <typename T>
 class BinarySearchTree {
 private:
-	//BinaryTreeNode<T>* m_rootPrt;
+	BinaryTreeNode<T>* m_rootPrt;
 
 	BinaryTreeNode<T>* GetANewNode(T data) const;
 	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
@@ -38,7 +38,6 @@ private:
 	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 public:
-	BinaryTreeNode<T>* m_rootPrt;
 
 	BinarySearchTree();
 	void Insert(T data);
@@ -51,6 +50,8 @@ public:
 	T GetMaxRec() const;
 	void TraverseRec(Order order, void(*callBack)(T data)) const;
 	void TraverseInorder(void(*callBack)(T data)) const;
+	void TraversePreorder(void(*callBack)(T data)) const;
+	void TraversePostorder(void(*callBack)(T data)) const;
 };
 
 void Insert_Search_Max_Min_Test();
@@ -59,7 +60,7 @@ void Print_Postorder_Preorder_Inorder_Test();
 
 int main(int argc, char** args) {
 	
-	//Insert_Search_Max_Min_Test();
+	Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Test();
 	
 	return 0;
@@ -272,6 +273,8 @@ void BinarySearchTree<T>::TraverseRec(Order order, void(*callBack)(T data)) cons
 template<typename T>
 void BinarySearchTree<T>::TraverseInorder(void(*callBack)(T data)) const
 {
+	if (m_rootPrt == nullptr) return;
+
 	BinaryTreeNode<T>* curr = m_rootPrt;
 
 	std::stack<BinaryTreeNode<T>*> s;
@@ -299,6 +302,72 @@ void BinarySearchTree<T>::TraverseInorder(void(*callBack)(T data)) const
 		   subtree's turn */
 		curr = curr->m_rightPtr;
 
+	}
+}
+
+template<typename T>
+void BinarySearchTree<T>::TraversePreorder(void(*callBack)(T data)) const
+{
+	if (m_rootPrt == nullptr) return;
+
+	BinaryTreeNode<T>* curr = m_rootPrt;
+
+	std::stack<BinaryTreeNode<T>*> s;
+
+	while (!s.empty() || curr != nullptr) {
+		/* Print left children while exist
+		   and keep pushing right into the
+		   stack. */
+		while (curr != nullptr) {
+
+			callBack(curr->m_data);
+
+			if (curr->m_rightPtr)
+				s.push(curr->m_rightPtr);
+
+			curr = curr->m_leftPtr;
+		}
+
+		/* We reach when curr is NULL, so We
+		   take out a right child from stack */
+		if (s.empty() == false) {
+			curr = s.top();
+			s.pop();
+		}
+	}
+}
+
+template<typename T>
+void BinarySearchTree<T>::TraversePostorder(void(*callBack)(T data)) const
+{
+	if (m_rootPrt == nullptr) return;
+
+	BinaryTreeNode<T>* node;
+
+	std::stack<BinaryTreeNode<T>*> s1, s2;
+	// push root to first stack
+	s1.push(m_rootPrt);
+
+	// Run while first stack is not empty
+	while (!s1.empty()) {
+		// Pop an item from s1 and push it to s2
+		node = s1.top();
+		s1.pop();
+		s2.push(node);
+
+		// Push left and right children
+		// of removed item to s1
+		if (node->m_leftPtr)
+			s1.push(node->m_leftPtr);
+		if (node->m_rightPtr)
+			s1.push(node->m_rightPtr);
+	}
+
+	// Print all elements of second stack
+	while (!s2.empty()) {
+		node = s2.top();
+		s2.pop();
+		callBack(node->m_data);
 	}
 }
 
@@ -395,15 +464,27 @@ void Print_Postorder_Preorder_Inorder_Test()
 	tree.TraverseRec(Order::Postorder, [](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	std::cout << "Preorder Rec : ";
+	std::cout << "Postorder     : ";
+	tree.TraversePostorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Preorder Rec  : ";
 	tree.TraverseRec(Order::Preorder, [](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	std::cout << "Inorder Rec : ";
+	std::cout << "Postorder     : ";
+	tree.TraversePreorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Inorder Rec   : ";
 	tree.TraverseRec(Order::Inorder, [](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	std::cout << "Inorder     : ";
+	std::cout << "Inorder       : ";
 	tree.TraverseInorder([](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
+
+	
+
+	
 }
