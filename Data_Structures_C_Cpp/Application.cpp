@@ -28,7 +28,6 @@ template <typename T>
 class BinarySearchTree {
 private:
 	BinaryTreeNode<T>* m_rootPrt;
-
 	BinaryTreeNode<T>* GetANewNode(T data) const;
 	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
 	bool Search(T data, BinaryTreeNode<T>* rootPtr) const;
@@ -38,8 +37,8 @@ private:
 	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	int FindHeight(BinaryTreeNode<T>* rootPtr) const;
-public:
 
+public:
 	BinarySearchTree();
 	void Insert(T data);
 	void InsertRec(T data);
@@ -53,19 +52,22 @@ public:
 	void TraverseInorder(void(*callBack)(T data)) const;
 	void TraversePreorder(void(*callBack)(T data)) const;
 	void TraversePostorder(void(*callBack)(T data)) const;
+	T Traverse(T(*callBack)(T data, T returnValue)) const;
+	void Traverse(void(*callBack)(T* data)) const;
 	int FindHeightRec() const;
 };
 
 void Insert_Search_Max_Min_Test();
 void Print_Postorder_Preorder_Inorder_Test();
 void Find_Height_Test();
-
+void Traverse_Test();
 
 int main(int argc, char** args) {
 	
 	Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Test();
 	Find_Height_Test();
+	Traverse_Test();
 
 	return 0;
 }
@@ -77,6 +79,7 @@ BinaryTreeNode<T>::BinaryTreeNode(T data) :m_leftPtr(nullptr), m_rightPtr(nullpt
 
 // --- BinarySearchTree --- //
 
+//  private //
 template<typename T>
 BinaryTreeNode<T>* BinarySearchTree<T>::GetANewNode(T data) const
 {
@@ -167,6 +170,8 @@ int BinarySearchTree<T>::FindHeight(BinaryTreeNode<T>* rootPtr) const
 	if (leftHeight > rightHeight) return leftHeight + 1;
 	else return rightHeight + 1;
 }
+
+// public //
 
 template<typename T>
 BinarySearchTree<T>::BinarySearchTree():m_rootPrt(nullptr){}
@@ -388,10 +393,64 @@ void BinarySearchTree<T>::TraversePostorder(void(*callBack)(T data)) const
 }
 
 template<typename T>
+T BinarySearchTree<T>::Traverse(T(*callBack)(T data, T returnValue)) const
+{
+	T returnValue = T();
+
+	if (m_rootPrt == nullptr) return T();
+
+	BinaryTreeNode<T>* curr = m_rootPrt;
+	std::stack<BinaryTreeNode<T>*> s;
+
+	while (curr != nullptr || s.empty() == false)
+	{
+		while (curr != nullptr)
+		{
+			s.push(curr);
+			curr = curr->m_leftPtr;
+		}
+		curr = s.top();
+		s.pop();
+
+		returnValue = callBack(curr->m_data, returnValue);
+
+		curr = curr->m_rightPtr;
+	}
+
+	return returnValue;
+}
+
+template<typename T>
+void BinarySearchTree<T>::Traverse(void(*callBack)(T *data)) const
+{
+	if (m_rootPrt == nullptr) return;
+
+	BinaryTreeNode<T>* curr = m_rootPrt;
+	std::stack<BinaryTreeNode<T>*> s;
+
+	while (curr != nullptr || s.empty() == false)
+	{
+		while (curr != nullptr)
+		{
+			s.push(curr);
+			curr = curr->m_leftPtr;
+		}
+		curr = s.top();
+		s.pop();
+
+		callBack(&(curr->m_data));
+
+		curr = curr->m_rightPtr;
+	}
+}
+
+template<typename T>
 int BinarySearchTree<T>::FindHeightRec() const
 {
 	return FindHeight(m_rootPrt);
 }
+
+// --- Test --- //
 
 void Insert_Search_Max_Min_Test()
 {
@@ -544,4 +603,58 @@ void Find_Height_Test()
 	*/
 
 	std::cout << "Height : " << tree.FindHeightRec() << std::endl;
+}
+
+void Traverse_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+	tree.Insert(30);
+
+	/*
+				 15
+			  ___|___
+			 |       |
+			10       20
+		   __|__    __|__
+		  |     |  |     |
+		  4    11  16   25
+		__|            __|__
+	   |              |     |
+	   3             21     26
+							|__
+							   |
+							   30
+	*/
+
+	std::cout << "Inorder : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Sum : " << tree.Traverse([](int data, int returnVal) {return data + returnVal; }) << std::endl;
+
+	tree.Traverse(
+		[](int* data)
+	{
+		*data = *data + 1;
+	}
+	);
+
+	std::cout << "Inorder : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	std::cout << "Sum : " << tree.Traverse([](int data, int returnVal) {return data + returnVal; }) << std::endl;
+
+	std::cout << "Number of nodes : " << tree.Traverse([](int data, int returnVal) {return returnVal + 1; }) << std::endl;
 }
