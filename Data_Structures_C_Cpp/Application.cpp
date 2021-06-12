@@ -37,6 +37,7 @@ private:
 	void TraversePostorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
+	int FindHeight(BinaryTreeNode<T>* rootPtr) const;
 public:
 
 	BinarySearchTree();
@@ -52,17 +53,20 @@ public:
 	void TraverseInorder(void(*callBack)(T data)) const;
 	void TraversePreorder(void(*callBack)(T data)) const;
 	void TraversePostorder(void(*callBack)(T data)) const;
+	int FindHeightRec() const;
 };
 
 void Insert_Search_Max_Min_Test();
-
 void Print_Postorder_Preorder_Inorder_Test();
+void Find_Height_Test();
+
 
 int main(int argc, char** args) {
 	
 	Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Test();
-	
+	Find_Height_Test();
+
 	return 0;
 }
 
@@ -150,6 +154,18 @@ void BinarySearchTree<T>::TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*call
 	TraverseInorder(rootPrt->m_leftPtr, callBack);
 	callBack(rootPrt->m_data);
 	TraverseInorder(rootPrt->m_rightPtr, callBack);
+}
+
+template<typename T>
+int BinarySearchTree<T>::FindHeight(BinaryTreeNode<T>* rootPtr) const
+{
+	if (rootPtr == nullptr) return -1;
+
+	int leftHeight = FindHeight(rootPtr->m_leftPtr);
+	int rightHeight = FindHeight(rootPtr->m_rightPtr);
+
+	if (leftHeight > rightHeight) return leftHeight + 1;
+	else return rightHeight + 1;
 }
 
 template<typename T>
@@ -371,6 +387,12 @@ void BinarySearchTree<T>::TraversePostorder(void(*callBack)(T data)) const
 	}
 }
 
+template<typename T>
+int BinarySearchTree<T>::FindHeightRec() const
+{
+	return FindHeight(m_rootPrt);
+}
+
 void Insert_Search_Max_Min_Test()
 {
 	BinarySearchTree<int> tree;
@@ -447,17 +469,17 @@ void Print_Postorder_Preorder_Inorder_Test()
 	tree.Insert(26);
 
 	/*
-			15
-		  __|__
-		 |     |
-		10    20
-	   _|_    _|_
-	  |   |  |   |
-	  4  11  16 25
-	 _|         _|_
-	|          |   |
-	3          21 26
-
+	    		 15
+	    	  ___|___
+	    	 |       |
+	    	10       20
+	       __|__    __|__
+	      |     |  |     |
+	      4    11  16   25
+	    __|            __|__
+	   |              |     |
+	   3             21     26
+	    
 	*/
 
 	std::cout << "Postorder Rec : ";
@@ -487,4 +509,39 @@ void Print_Postorder_Preorder_Inorder_Test()
 	
 
 	
+}
+
+void Find_Height_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+	tree.Insert(30);
+
+	/*
+				 15
+			  ___|___
+			 |       |
+			10       20
+		   __|__    __|__
+		  |     |  |     |
+		  4    11  16   25
+		__|            __|__
+	   |              |     |
+	   3             21     26
+							|__
+							   |
+							   30
+	*/
+
+	std::cout << "Height : " << tree.FindHeightRec() << std::endl;
 }
