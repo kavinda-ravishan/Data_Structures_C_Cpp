@@ -1,4 +1,5 @@
 #include <stack>
+#include <queue>
 #include <iostream>
 
 /*
@@ -55,17 +56,18 @@ public:
 	T Traverse(T(*callBack)(T data, T returnValue)) const;
 	void Traverse(void(*callBack)(T* data)) const;
 	int FindHeightRec() const;
+	void LevelOrderTraverse(void(*callBack)(T data)) const;
 };
 
 void Insert_Search_Max_Min_Test();
-void Print_Postorder_Preorder_Inorder_Test();
+void Print_Postorder_Preorder_Inorder_Levelorder_Test();
 void Find_Height_Test();
 void Traverse_Test();
 
 int main(int argc, char** args) {
 	
 	Insert_Search_Max_Min_Test();
-	Print_Postorder_Preorder_Inorder_Test();
+	Print_Postorder_Preorder_Inorder_Levelorder_Test();
 	Find_Height_Test();
 	Traverse_Test();
 
@@ -450,6 +452,25 @@ int BinarySearchTree<T>::FindHeightRec() const
 	return FindHeight(m_rootPrt);
 }
 
+template<typename T>
+void BinarySearchTree<T>::LevelOrderTraverse(void(*callBack)(T data)) const
+{
+	if (m_rootPrt == nullptr) return;
+
+	std::queue<BinaryTreeNode<T>*> q;
+	q.push(m_rootPrt);
+
+	while (!q.empty()) {
+
+		callBack(q.front()->m_data);
+		
+		if (q.front()->m_leftPtr) q.push(q.front()->m_leftPtr);
+		if (q.front()->m_rightPtr) q.push(q.front()->m_rightPtr);
+
+		q.pop();
+	}
+}
+
 // --- Test --- //
 
 void Insert_Search_Max_Min_Test()
@@ -512,7 +533,7 @@ void Insert_Search_Max_Min_Test()
 	std::cout << "Max : " << tree.GetMaxRec() << std::endl;
 }
 
-void Print_Postorder_Preorder_Inorder_Test()
+void Print_Postorder_Preorder_Inorder_Levelorder_Test()
 {
 	BinarySearchTree<int> tree;
 
@@ -565,9 +586,10 @@ void Print_Postorder_Preorder_Inorder_Test()
 	tree.TraverseInorder([](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
 
-	
+	std::cout << "Levelorder    : ";
+	tree.LevelOrderTraverse([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
 
-	
 }
 
 void Find_Height_Test()
