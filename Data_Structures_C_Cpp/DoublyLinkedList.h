@@ -24,6 +24,7 @@ public:
 	void InsertAtTail(T data);
 };
 
+
 class DoublyLinkedListTest {
 public:
 	template <typename T>

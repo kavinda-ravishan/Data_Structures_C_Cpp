@@ -47,7 +47,7 @@ public:
 	bool IsEmpty() const;
 };
 
-template<typename T, const int Size>
+template<typename T, const unsigned int Size>
 class QueueArray {
 private:
 	T m_queue[Size];
@@ -55,6 +55,7 @@ private:
 	int m_rear;
 public:
 	QueueArray() :m_front(-1), m_rear(-1) {}
+	int ArraySize() const;
 	void Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 	void TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 	void EnQueue(T data); // Push
@@ -148,12 +149,14 @@ void Traverse_Test();
 
 int main(int argc, char** args) {
 	
+	
 	StackQueuTest::TestAll();
 
 	Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Levelorder_Test();
 	Find_Height_Test();
 	Traverse_Test();
+	
 
 	return 0;
 }
@@ -930,7 +933,13 @@ bool Queue<T>::IsEmpty() const
 
 #pragma region QueueArray
 
-template<typename T, const int Size>
+template<typename T, const unsigned int Size>
+int QueueArray<T, Size>::ArraySize() const
+{
+	return Size;
+}
+
+template<typename T, const unsigned int Size>
 void QueueArray<T, Size>::Traverse(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
 {
 	callbackStart();
@@ -945,7 +954,7 @@ void QueueArray<T, Size>::Traverse(void(*callback)(T data), void(*callbackStart)
 	callbackEnd();
 }
 
-template<typename T, const int Size>
+template<typename T, const unsigned int Size>
 void QueueArray<T, Size>::TraverseArray(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const
 {
 	callbackStart();
@@ -958,21 +967,21 @@ void QueueArray<T, Size>::TraverseArray(void(*callback)(T data), void(*callbackS
 	callbackEnd();
 }
 
-template<typename T, int Size>
+template<typename T, const unsigned int Size>
 bool QueueArray<T, Size>::IsEmpty() const
 {
 	if (m_front == -1 && m_rear == -1) return true;
 	else return false;
 }
 
-template<typename T, int Size>
+template<typename T, const unsigned int Size>
 bool QueueArray<T, Size>::IsFull() const
 {
 	if ((m_rear + 1) % Size == m_front) return true;
 	else return false;
 }
 
-template<typename T, int Size>
+template<typename T, const unsigned int Size>
 void QueueArray<T, Size>::EnQueue(T data)
 {
 	if (IsFull()) return;
@@ -985,7 +994,7 @@ void QueueArray<T, Size>::EnQueue(T data)
 	m_queue[m_rear] = data;
 }
 
-template<typename T, int Size>
+template<typename T, const unsigned int Size>
 void QueueArray<T, Size>::DeQueue()
 {
 	if (IsEmpty()) return;
@@ -996,7 +1005,7 @@ void QueueArray<T, Size>::DeQueue()
 	else m_front = (m_front + 1) % Size;
 }
 
-template<typename T, int Size>
+template<typename T, const unsigned int Size>
 T QueueArray<T, Size>::Front() const
 {
 	if (IsEmpty()) return T();
@@ -1283,6 +1292,8 @@ Operators StackQueuTest::GetOperator(char c)
 void StackQueuTest::QueueArrayTest()
 {
 	QueueArray<int, 3> queue;
+
+	std::cout << "Array Size : " << queue.ArraySize() << std::endl;
 
 	std::cout << "Is Empty : " << queue.IsEmpty() << std::endl;
 	std::cout << "Is Full : " << queue.IsFull() << std::endl;
