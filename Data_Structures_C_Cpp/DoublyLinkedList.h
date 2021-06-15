@@ -18,8 +18,8 @@ private:
 public:
 	DoublyLinkedList();
 
-	void TraverseHeadToTail(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)());
-	void TraverseTailToHead(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)());
+	void TraverseHeadToTail(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
+	void TraverseTailToHead(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) const;
 	void InsertAtHead(T data);
 	void InsertAtTail(T data);
 };

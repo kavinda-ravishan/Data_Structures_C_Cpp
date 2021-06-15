@@ -17,7 +17,7 @@ template<typename T>
 DoublyLinkedList<T>::DoublyLinkedList() :m_headPtr(nullptr), m_tailPtr(nullptr) {}
 
 template<typename T>
-void DoublyLinkedList<T>::TraverseHeadToTail(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) {
+void DoublyLinkedList<T>::TraverseHeadToTail(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)())const {
 
 	callbackStart();
 
@@ -33,7 +33,7 @@ void DoublyLinkedList<T>::TraverseHeadToTail(void(*callback)(T data), void(*call
 }
 
 template<typename T>
-void DoublyLinkedList<T>::TraverseTailToHead(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)()) {
+void DoublyLinkedList<T>::TraverseTailToHead(void(*callback)(T data), void(*callbackStart)(), void(*callbackEnd)())const {
 
 	callbackStart();
 

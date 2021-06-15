@@ -1,5 +1,5 @@
 #include <iostream>
-
+#include <array>
 /*
 #include "SinglyLinkedList.h"
 #include "DoublyLinkedList.h"
@@ -121,6 +121,9 @@ private:
 	void TraversePreorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	void TraverseInorder(BinaryTreeNode<T>* rootPrt, void(*callBack)(T data)) const;
 	int FindHeight(BinaryTreeNode<T>* rootPtr) const;
+	bool IsBinarySearchTree(BinaryTreeNode<T>* rootPtr) const;
+	bool IsSubTreeGeater(BinaryTreeNode<T>* rootPtr, T data) const;
+	bool IsSubTreeLesser(BinaryTreeNode<T>* rootPtr, T data) const;
 
 public:
 	BinarySearchTree();
@@ -140,23 +143,28 @@ public:
 	void Traverse(void(*callBack)(T* data)) const;
 	int FindHeightRec() const;
 	void LevelOrderTraverse(void(*callBack)(T data)) const;
+	bool IsBinarySearchTreeRec() const;
 };
 
 void Insert_Search_Max_Min_Test();
 void Print_Postorder_Preorder_Inorder_Levelorder_Test();
 void Find_Height_Test();
 void Traverse_Test();
+void Is_Binary_Search_Tree_Test();
 
 int main(int argc, char** args) {
+
 	
-	
+	/*
 	StackQueuTest::TestAll();
 
 	Insert_Search_Max_Min_Test();
 	Print_Postorder_Preorder_Inorder_Levelorder_Test();
 	Find_Height_Test();
 	Traverse_Test();
-	
+	*/
+
+	Is_Binary_Search_Tree_Test();
 
 	return 0;
 }
@@ -260,6 +268,46 @@ int BinarySearchTree<T>::FindHeight(BinaryTreeNode<T>* rootPtr) const
 
 	if (leftHeight > rightHeight) return leftHeight + 1;
 	else return rightHeight + 1;
+}
+
+template<typename T>
+bool BinarySearchTree<T>::IsBinarySearchTree(BinaryTreeNode<T>* rootPtr) const
+{
+	if (rootPtr == nullptr) 
+		return true;
+	if (IsSubTreeLesser(rootPtr->m_leftPtr, rootPtr->m_data)
+		&& IsSubTreeGeater(rootPtr->m_rightPtr, rootPtr->m_data)
+		&& IsBinarySearchTree(rootPtr->m_leftPtr)
+		&& IsBinarySearchTree(rootPtr->m_rightPtr)) 
+		return true;
+	else 
+		return false;
+}
+
+template<typename T>
+bool BinarySearchTree<T>::IsSubTreeGeater(BinaryTreeNode<T>* rootPtr, T data) const
+{
+	if (rootPtr == nullptr) 
+		return true;
+	if (rootPtr->m_data > data
+		&& IsSubTreeGeater(rootPtr->m_leftPtr, data)
+		&& IsSubTreeGeater(rootPtr->m_rightPtr, data)) 
+		return true;
+	else 
+		return false;
+}
+
+template<typename T>
+bool BinarySearchTree<T>::IsSubTreeLesser(BinaryTreeNode<T>* rootPtr, T data) const
+{
+	if (rootPtr == nullptr) 
+		return true;
+	if (rootPtr->m_data <= data
+		&& IsSubTreeLesser(rootPtr->m_leftPtr, data)
+		&& IsSubTreeLesser(rootPtr->m_rightPtr, data)) 
+		return true;
+	else 
+		return false;
 }
 
 // public //
@@ -560,6 +608,12 @@ void BinarySearchTree<T>::LevelOrderTraverse(void(*callBack)(T data)) const
 	}
 }
 
+template<typename T>
+bool BinarySearchTree<T>::IsBinarySearchTreeRec() const
+{
+	return IsBinarySearchTree(m_rootPrt);
+}
+
 
 #pragma endregion
 
@@ -771,6 +825,41 @@ void Traverse_Test()
 	std::cout << "Sum : " << tree.Traverse([](int data, int returnVal) {return data + returnVal; }) << std::endl;
 
 	std::cout << "Number of nodes : " << tree.Traverse([](int data, int returnVal) {return returnVal + 1; }) << std::endl;
+}
+
+void Is_Binary_Search_Tree_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+	tree.Insert(30);
+
+	/*
+				 15
+			  ___|___
+			 |       |
+			10       20
+		   __|__    __|__
+		  |     |  |     |
+		  4    11  16   25
+		__|            __|__
+	   |              |     |
+	   3             21     26
+							|__
+							   |
+							   30
+	*/
+	std::cout << "Is Binary Search Tree : ";
+	std::cout << (tree.IsBinarySearchTreeRec() ? "True" : "False") << std::endl;
 }
 
 #pragma endregion
