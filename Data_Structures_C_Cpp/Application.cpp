@@ -112,6 +112,7 @@ template <typename T>
 class BinarySearchTree {
 private:
 	BinaryTreeNode<T>* m_rootPrt;
+
 	BinaryTreeNode<T>* GetANewNode(T data) const;
 	BinaryTreeNode<T>* Insert(T data, BinaryTreeNode<T>* rootPtr);
 	bool Search(T data, BinaryTreeNode<T>* rootPtr) const;
@@ -124,9 +125,10 @@ private:
 	bool IsBinarySearchTree(BinaryTreeNode<T>* rootPtr) const;
 	bool IsSubTreeGeater(BinaryTreeNode<T>* rootPtr, T data) const;
 	bool IsSubTreeLesser(BinaryTreeNode<T>* rootPtr, T data) const;
-
+	bool IsBinarySearchTree(BinaryTreeNode<T>* rootPtr, T minValue, T maxValue) const;
 public:
 	BinarySearchTree();
+	BinaryTreeNode<T>* GetRoot() const;
 	void Insert(T data);
 	void InsertRec(T data);
 	bool Search(T data) const;
@@ -144,6 +146,7 @@ public:
 	int FindHeightRec() const;
 	void LevelOrderTraverse(void(*callBack)(T data)) const;
 	bool IsBinarySearchTreeRec() const;
+	bool IsBinarySearchTree(T minValue, T maxValue) const;
 };
 
 void Insert_Search_Max_Min_Test();
@@ -310,10 +313,30 @@ bool BinarySearchTree<T>::IsSubTreeLesser(BinaryTreeNode<T>* rootPtr, T data) co
 		return false;
 }
 
+template<typename T>
+bool BinarySearchTree<T>::IsBinarySearchTree(BinaryTreeNode<T>* rootPtr, T minValue, T maxValue) const
+{
+	if (rootPtr == nullptr)
+		return true;
+	if (rootPtr->m_data >= minValue
+		&& rootPtr->m_data < maxValue
+		&& IsBinarySearchTree(rootPtr->m_leftPtr, minValue, rootPtr->m_data)
+		&& IsBinarySearchTree(rootPtr->m_rightPtr,rootPtr->m_data, maxValue))
+		return true;
+	else
+		return false;
+}
+
 // public //
 
 template<typename T>
 BinarySearchTree<T>::BinarySearchTree() :m_rootPrt(nullptr) {}
+
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::GetRoot() const
+{
+	return m_rootPrt;
+}
 
 template<typename T>
 void BinarySearchTree<T>::Insert(T data)
@@ -614,6 +637,12 @@ bool BinarySearchTree<T>::IsBinarySearchTreeRec() const
 	return IsBinarySearchTree(m_rootPrt);
 }
 
+template<typename T>
+bool BinarySearchTree<T>::IsBinarySearchTree(T minValue, T maxValue) const
+{
+	return IsBinarySearchTree(m_rootPrt, minValue, maxValue);
+}
+
 
 #pragma endregion
 
@@ -829,21 +858,27 @@ void Traverse_Test()
 
 void Is_Binary_Search_Tree_Test()
 {
-	BinarySearchTree<int> tree;
+	BinarySearchTree<int> tree1;
+	BinarySearchTree<int> tree2;
 
-	tree.Insert(15);
-	tree.Insert(10);
-	tree.Insert(4);
-	tree.Insert(20);
-	tree.Insert(3);
-	tree.Insert(25);
-	tree.Insert(16);
-	tree.Insert(11);
-	tree.Insert(21);
-	tree.Insert(26);
-	tree.Insert(30);
+	tree1.Insert(15);
+	tree1.Insert(10);
+	tree1.Insert(4);
+	tree1.Insert(20);
+	tree1.Insert(3);
+	tree1.Insert(25);
+	tree1.Insert(16);
+	tree1.Insert(11);
+	tree1.Insert(21);
+	tree1.Insert(26);
+	tree1.Insert(30);
 
-	/*
+	tree2.Insert(50);
+	tree2.GetRoot()->m_leftPtr = new BinaryTreeNode<int>(100);
+	tree2.GetRoot()->m_rightPtr = new BinaryTreeNode<int>(10);
+
+	/* Tree_1
+
 				 15
 			  ___|___
 			 |       |
@@ -858,8 +893,25 @@ void Is_Binary_Search_Tree_Test()
 							   |
 							   30
 	*/
-	std::cout << "Is Binary Search Tree : ";
-	std::cout << (tree.IsBinarySearchTreeRec() ? "True" : "False") << std::endl;
+	/* Tree_2
+	     
+		         50
+			   __|__
+			  |     |
+			 100    10
+	*/
+
+
+	std::cout << "Is Tree 1 Binary Search Tree : ";
+	std::cout << (tree1.IsBinarySearchTreeRec() ? "True" : "False") << std::endl;
+	std::cout << "Is Tree 2 Binary Search Tree : ";
+	std::cout << (tree2.IsBinarySearchTreeRec() ? "True" : "False") << std::endl;
+	
+
+	std::cout << "Is Tree 1 Binary Search Tree : ";
+	std::cout << (tree1.IsBinarySearchTree(-1000, 1000) ? "True" : "False") << std::endl;
+	std::cout << "Is Tree 2 Binary Search Tree : ";
+	std::cout << (tree2.IsBinarySearchTree(-1000, 1000) ? "True" : "False") << std::endl;
 }
 
 #pragma endregion
