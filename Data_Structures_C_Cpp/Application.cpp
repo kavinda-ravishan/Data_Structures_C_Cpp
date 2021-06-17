@@ -126,6 +126,7 @@ private:
 	bool IsSubTreeGeater(BinaryTreeNode<T>* rootPtr, T data) const;
 	bool IsSubTreeLesser(BinaryTreeNode<T>* rootPtr, T data) const;
 	bool IsBinarySearchTree(BinaryTreeNode<T>* rootPtr, T minValue, T maxValue) const;
+	BinaryTreeNode<T>* Delete(BinaryTreeNode<T>* rootPtr, T data);
 public:
 	BinarySearchTree();
 	BinaryTreeNode<T>* GetRoot() const;
@@ -147,6 +148,7 @@ public:
 	void LevelOrderTraverse(void(*callBack)(T data)) const;
 	bool IsBinarySearchTreeRec() const;
 	bool IsBinarySearchTree(T minValue, T maxValue) const;
+	void Delete(T data);
 };
 
 void Insert_Search_Max_Min_Test();
@@ -154,6 +156,7 @@ void Print_Postorder_Preorder_Inorder_Levelorder_Test();
 void Find_Height_Test();
 void Traverse_Test();
 void Is_Binary_Search_Tree_Test();
+void Delete_Test();
 
 int main(int argc, char** args) {
 
@@ -165,9 +168,10 @@ int main(int argc, char** args) {
 	Print_Postorder_Preorder_Inorder_Levelorder_Test();
 	Find_Height_Test();
 	Traverse_Test();
-	*/
-
 	Is_Binary_Search_Tree_Test();
+	*/
+	Delete_Test();
+	
 
 	return 0;
 }
@@ -325,6 +329,39 @@ bool BinarySearchTree<T>::IsBinarySearchTree(BinaryTreeNode<T>* rootPtr, T minVa
 		return true;
 	else
 		return false;
+}
+
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::Delete(BinaryTreeNode<T>* rootPtr, T data)
+{
+	if (rootPtr == nullptr) return rootPtr;
+	else if (data < rootPtr->m_data)  rootPtr->m_leftPtr = Delete(rootPtr->m_leftPtr, data);
+	else if (data > rootPtr->m_data)  rootPtr->m_rightPtr = Delete(rootPtr->m_rightPtr, data);
+	else { // Delete the node
+		// case 1 : No child
+		if (rootPtr->m_leftPtr == nullptr && rootPtr->m_rightPtr == nullptr) {
+			delete rootPtr;
+			rootPtr = nullptr;
+		}
+		//case 2 : One child
+		else if (rootPtr->m_leftPtr == nullptr) {
+			BinaryTreeNode<T>* temp = rootPtr;
+			rootPtr = rootPtr->m_rightPtr;
+			delete temp;
+		}
+		else if (rootPtr->m_rightPtr == nullptr) {
+			BinaryTreeNode<T>* temp = rootPtr;
+			rootPtr = rootPtr->m_leftPtr;
+			delete temp;
+		}
+		//case 3 : 2 children
+		else {
+			T temp = GetMin(rootPtr->m_rightPtr);
+			rootPtr->m_data = temp;
+			rootPtr->m_rightPtr = Delete(rootPtr->m_rightPtr, temp);
+		}
+	}
+	return rootPtr;
 }
 
 // public //
@@ -643,6 +680,12 @@ bool BinarySearchTree<T>::IsBinarySearchTree(T minValue, T maxValue) const
 	return IsBinarySearchTree(m_rootPrt, minValue, maxValue);
 }
 
+template<typename T>
+void BinarySearchTree<T>::Delete(T data)
+{
+	Delete(m_rootPrt, data);
+}
+
 
 #pragma endregion
 
@@ -912,6 +955,50 @@ void Is_Binary_Search_Tree_Test()
 	std::cout << (tree1.IsBinarySearchTree(-1000, 1000) ? "True" : "False") << std::endl;
 	std::cout << "Is Tree 2 Binary Search Tree : ";
 	std::cout << (tree2.IsBinarySearchTree(-1000, 1000) ? "True" : "False") << std::endl;
+}
+
+void Delete_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+	tree.Insert(30);
+
+	/* Tree_1
+
+				 15
+			  ___|___
+			 |       |
+			10       20
+		   __|__    __|__
+		  |     |  |     |
+		  4    11  16   25
+		__|            __|__
+	   |              |     |
+	   3             21     26
+							|__
+							   |
+							   30
+	*/
+
+	std::cout << "Levelorder    : ";
+	tree.LevelOrderTraverse([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	tree.Delete(30);
+
+	std::cout << "Levelorder    : ";
+	tree.LevelOrderTraverse([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
 }
 
 #pragma endregion
