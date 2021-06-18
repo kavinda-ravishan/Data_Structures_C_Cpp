@@ -133,6 +133,7 @@ public:
 	void Insert(T data);
 	void InsertRec(T data);
 	bool Search(T data) const;
+	BinaryTreeNode<T>* Find(T data) const;
 	bool SearchRec(T data) const;
 	T GetMin() const;
 	T GetMinRec() const;
@@ -149,6 +150,7 @@ public:
 	bool IsBinarySearchTreeRec() const;
 	bool IsBinarySearchTree(T minValue, T maxValue) const;
 	void Delete(T data);
+	BinaryTreeNode<T>* GetSuccessor(T data);
 };
 
 void Insert_Search_Max_Min_Test();
@@ -157,6 +159,7 @@ void Find_Height_Test();
 void Traverse_Test();
 void Is_Binary_Search_Tree_Test();
 void Delete_Test();
+void Find_Successor_Test();
 
 int main(int argc, char** args) {
 
@@ -169,9 +172,9 @@ int main(int argc, char** args) {
 	Find_Height_Test();
 	Traverse_Test();
 	Is_Binary_Search_Tree_Test();
-	*/
 	Delete_Test();
-	
+	*/
+	Find_Successor_Test();
 
 	return 0;
 }
@@ -364,6 +367,7 @@ BinaryTreeNode<T>* BinarySearchTree<T>::Delete(BinaryTreeNode<T>* rootPtr, T dat
 	return rootPtr;
 }
 
+
 // public //
 
 template<typename T>
@@ -421,6 +425,20 @@ bool BinarySearchTree<T>::Search(T data) const
 		else tempPtr = tempPtr->m_rightPtr;
 	}
 	return false;
+}
+
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::Find(T data) const
+{
+	BinaryTreeNode<T>* tempPtr = m_rootPrt;
+
+	while (tempPtr != nullptr)
+	{
+		if (data == tempPtr->m_data) return tempPtr;
+		else if (data <= tempPtr->m_data) tempPtr = tempPtr->m_leftPtr;
+		else tempPtr = tempPtr->m_rightPtr;
+	}
+	return nullptr;
 }
 
 template<typename T>
@@ -686,6 +704,33 @@ void BinarySearchTree<T>::Delete(T data)
 	Delete(m_rootPrt, data);
 }
 
+template<typename T>
+BinaryTreeNode<T>* BinarySearchTree<T>::GetSuccessor(T data)
+{
+	BinaryTreeNode<T>* current = Find(data);
+	if (current == nullptr) return nullptr;
+
+	// Case 1 : Node has right subtree
+	if (current->m_rightPtr != nullptr) {
+		BinaryTreeNode<T>* temp = current->m_rightPtr;
+		while (temp->m_leftPtr != nullptr) temp = temp->m_leftPtr;
+		return temp;
+	}
+	// Case 2 : No right subtree
+	else {
+		BinaryTreeNode<T>* successor = nullptr;
+		BinaryTreeNode<T>* ancestor = m_rootPrt;
+		while (ancestor != current)
+		{
+			if (current->m_data < ancestor->m_data) {
+				successor = ancestor;
+				ancestor = ancestor->m_leftPtr;
+			}
+			else ancestor = ancestor->m_rightPtr;
+		}
+		return successor;
+	}
+}
 
 #pragma endregion
 
@@ -993,12 +1038,60 @@ void Delete_Test()
 	std::cout << "Levelorder    : ";
 	tree.LevelOrderTraverse([](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
+	std::cout << "Inorder       : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
 
-	tree.Delete(30);
+	tree.Delete(20);
 
 	std::cout << "Levelorder    : ";
 	tree.LevelOrderTraverse([](int data) {std::cout << data << " "; });
 	std::cout << std::endl;
+	std::cout << "Inorder       : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+}
+
+void Find_Successor_Test()
+{
+	BinarySearchTree<int> tree;
+
+	tree.Insert(15);
+	tree.Insert(10);
+	tree.Insert(4);
+	tree.Insert(20);
+	tree.Insert(3);
+	tree.Insert(25);
+	tree.Insert(16);
+	tree.Insert(11);
+	tree.Insert(21);
+	tree.Insert(26);
+	tree.Insert(30);
+
+	/* Tree_1
+
+				 15
+			  ___|___
+			 |       |
+			10       20
+		   __|__    __|__
+		  |     |  |     |
+		  4    11  16   25
+		__|            __|__
+	   |              |     |
+	   3             21     26
+							|__
+							   |
+							   30
+	*/
+
+	std::cout << "Inorder : ";
+	tree.TraverseInorder([](int data) {std::cout << data << " "; });
+	std::cout << std::endl;
+
+	int val = 16;
+	BinaryTreeNode<int>* successor = tree.GetSuccessor(val);
+	std::cout << "Seccessor of : "<<val<<" -> "<<(successor==nullptr ? 0 : successor->m_data) << std::endl;
 }
 
 #pragma endregion
