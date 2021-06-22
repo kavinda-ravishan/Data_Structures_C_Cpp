@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <vector>
+#include <array>
 
 #define print(x) std::cout<<x
 #define printl(x) std::cout<<x<<std::endl
@@ -30,21 +31,20 @@ struct Edge
 		:m_startVertex(startVertex), m_endVertex(endVertex),m_weight(weight) {}
 };
 
-                         
-int main(int argc, char** args) {
+void Graph_1(){
 
 	std::vector<Vertex<char>> vertexList = {
-		Vertex<char>('A'), // 0
-		Vertex<char>('B'), // 1
-		Vertex<char>('C'), // 2
-		Vertex<char>('D'), // 3
-		Vertex<char>('E'), // 4
-		Vertex<char>('F'), // 5
-		Vertex<char>('G'), // 6
-		Vertex<char>('H')  // 7
+	Vertex<char>('A'), // 0
+	Vertex<char>('B'), // 1
+	Vertex<char>('C'), // 2
+	Vertex<char>('D'), // 3
+	Vertex<char>('E'), // 4
+	Vertex<char>('F'), // 5
+	Vertex<char>('G'), // 6
+	Vertex<char>('H')  // 7
 	};
 
-	std::vector<Edge<int,int>> edgeList = {
+	std::vector<Edge<int, int>> edgeList = {
 		Edge<int, int>(0, 1, 5),
 		Edge<int, int>(0, 2 ,7),
 		Edge<int, int>(0, 3, 3),
@@ -65,17 +65,71 @@ int main(int argc, char** args) {
 		printl(edgeList[i].m_weight);
 	}
 
-/*
-                      5
-				A ----------- B
-			7  / \  3      2 / \ 10
-			  /   \         /   \
-			 C     D       E     F
-		   1 |   11 \   9 /     /
-			 G       \   /     /
-			 |_________H _____/ 4
-                6
-*/
+	/*
+						  5
+					A ----------- B
+				7  / \  3      2 / \ 10
+				  /   \         /   \
+				 C     D       E     F
+			   1 |   11 \   9 /     /
+				 G       \   /     /
+				 |_________H _____/ 4
+					6
+	*/
+}
+
+int main(int argc, char** args) {
+
+	std::vector<Vertex<char>> vertexList = {
+	Vertex<char>('A'), // 0
+	Vertex<char>('B'), // 1
+	Vertex<char>('C'), // 2
+	Vertex<char>('D'), // 3
+	Vertex<char>('E'), // 4
+	Vertex<char>('F'), // 5
+	Vertex<char>('G'), // 6
+	Vertex<char>('H')  // 7
+	};
+
+	/*
+						  5
+					A ----------- B
+				7  / \  3      2 / \ 10
+				  /   \         /   \
+				 C     D       E     F
+			   1 |   11 \   9 /     /
+				 G       \   /     /
+				 |_________H _____/ 4
+					6
+	*/
+
+	const unsigned int SIZE_MAT = 8;
+
+	bool adjacencyMatrix[SIZE_MAT][SIZE_MAT] = {
+		{false, true , true , true , false, false, false, false},
+		{true , false, false, false, true , true , false, false},
+		{true , false, false, false, false, false, true , false},
+		{true , false, false, false, false, false, false, true },
+		{false, true , false, false, false, false, false, true },
+		{false, true , false, false, false, false, false, true },
+		{false, false, true , false, false, false, false, true },
+		{false, false, false, true , true , true , true , false}
+	};								 
+
+	for (int i = 0; i < SIZE_MAT; i++) {
+
+		print(vertexList[i].m_vertex);
+		print(" : ");
+
+		for (int j = 0; j < SIZE_MAT; j++) {
+
+			if (adjacencyMatrix[i][j]) {
+				print(vertexList[j].m_vertex);
+				print(" ");
+			}
+		}
+		printl("");
+	}
 
 	return 0;
 }
