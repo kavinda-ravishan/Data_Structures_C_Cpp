@@ -76,10 +76,11 @@ void Graph_1(){
 				 |_________H _____/ 4
 					6
 	*/
+
+	printl("");
 }
 
-int main(int argc, char** args) {
-
+void Graph_2() {
 	std::vector<Vertex<char>> vertexList = {
 	Vertex<char>('A'), // 0
 	Vertex<char>('B'), // 1
@@ -114,7 +115,7 @@ int main(int argc, char** args) {
 		{false, true , false, false, false, false, false, true },
 		{false, false, true , false, false, false, false, true },
 		{false, false, false, true , true , true , true , false}
-	};								 
+	};
 
 	for (int i = 0; i < SIZE_MAT; i++) {
 
@@ -130,6 +131,66 @@ int main(int argc, char** args) {
 		}
 		printl("");
 	}
+	printl("");
+
+}
+
+void Graph_3() {
+	std::vector<Vertex<char>> vertexList = {
+	Vertex<char>('A'), // 0
+	Vertex<char>('B'), // 1
+	Vertex<char>('C'), // 2
+	Vertex<char>('D'), // 3
+	Vertex<char>('E'), // 4
+	Vertex<char>('F'), // 5
+	Vertex<char>('G'), // 6
+	Vertex<char>('H')  // 7
+	};
+
+	/*
+						  5
+					A ----------- B
+				7  / \  3      2 / \ 10
+				  /   \         /   \
+				 C     D       E     F
+			   1 |   11 \   9 /     /
+				 G       \   /     /
+				 |_________H _____/ 4
+					6
+	*/
+
+	std::vector<std::vector<int>> adjacencyList = {
+		std::vector<int>{ 1,2,3 },
+		std::vector<int>{ 0,4,5 },
+		std::vector<int>{ 0,6 },
+		std::vector<int>{ 0,7 },
+		std::vector<int>{ 1,7 },
+		std::vector<int>{ 1,7 },
+		std::vector<int>{ 2,7 },
+		std::vector<int>{ 3,6,4,5 }
+	};
+
+	for (int i = 0; i < adjacencyList.size(); i++) {
+
+		print(vertexList[i].m_vertex);
+		print(" : ");
+		for (int j = 0; j < adjacencyList[i].size(); j++) {
+
+			print(vertexList[adjacencyList[i][j]].m_vertex);
+			print(" ");
+		}
+		printl("");
+	}
+	printl("");
+
+}
+
+int main(int argc, char** args) {
+
+	Graph_1();
+	Graph_2();
+	Graph_3();
+
 
 	return 0;
 }
